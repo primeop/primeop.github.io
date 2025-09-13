@@ -439,6 +439,48 @@ section {
     margin-bottom: 15px;
 }
 
+.highlight-icon .certificate-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid #00d4aa;
+    box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3);
+    transition: all 0.3s ease;
+}
+
+.highlight-icon .certificate-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 212, 170, 0.4);
+}
+
+.cert-button {
+    background: linear-gradient(135deg, #00d4aa, #00b894);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(0, 212, 170, 0.3);
+}
+
+.cert-button:hover {
+    background: linear-gradient(135deg, #00b894, #00a085);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 212, 170, 0.4);
+}
+
+.cert-button i {
+    font-size: 0.9rem;
+    margin: 0;
+}
+
 .highlight-content h3 {
     font-size: 1.4rem;
     margin-bottom: 15px;

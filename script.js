@@ -370,3 +370,155 @@ const activeNavCSS = `
 const activeStyle = document.createElement('style');
 activeStyle.textContent = activeNavCSS;
 document.head.appendChild(activeStyle);
+
+// Certificate viewer function
+function openCertificate(certPath) {
+    // Create modal overlay
+    const modal = document.createElement('div');
+    modal.className = 'certificate-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    `;
+    
+    // Create modal content
+    const modalContent = document.createElement('div');
+    modalContent.style.cssText = `
+        position: relative;
+        max-width: 90%;
+        max-height: 90%;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        transform: scale(0.8);
+        transition: transform 0.3s ease;
+    `;
+    
+    // Create close button
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '&times;';
+    closeBtn.style.cssText = `
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        font-size: 24px;
+        cursor: pointer;
+        z-index: 10001;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.3s ease;
+    `;
+    
+    closeBtn.addEventListener('mouseenter', () => {
+        closeBtn.style.background = 'rgba(0, 0, 0, 0.9)';
+    });
+    
+    closeBtn.addEventListener('mouseleave', () => {
+        closeBtn.style.background = 'rgba(0, 0, 0, 0.7)';
+    });
+    
+    // Create certificate image
+    const certImage = document.createElement('img');
+    certImage.src = certPath;
+    certImage.style.cssText = `
+        width: 100%;
+        height: auto;
+        display: block;
+        max-height: 80vh;
+        object-fit: contain;
+    `;
+    
+    // Add download button
+    const downloadBtn = document.createElement('a');
+    downloadBtn.href = certPath;
+    downloadBtn.download = certPath.split('/').pop();
+    downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download Certificate';
+    downloadBtn.style.cssText = `
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #00d4aa;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3);
+    `;
+    
+    downloadBtn.addEventListener('mouseenter', () => {
+        downloadBtn.style.background = '#00b894';
+        downloadBtn.style.transform = 'translateX(-50%) translateY(-2px)';
+        downloadBtn.style.boxShadow = '0 6px 20px rgba(0, 212, 170, 0.4)';
+    });
+    
+    downloadBtn.addEventListener('mouseleave', () => {
+        downloadBtn.style.background = '#00d4aa';
+        downloadBtn.style.transform = 'translateX(-50%) translateY(0)';
+        downloadBtn.style.boxShadow = '0 4px 15px rgba(0, 212, 170, 0.3)';
+    });
+    
+    // Assemble modal
+    modalContent.appendChild(closeBtn);
+    modalContent.appendChild(certImage);
+    modalContent.appendChild(downloadBtn);
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+    
+    // Animate in
+    setTimeout(() => {
+        modal.style.opacity = '1';
+        modalContent.style.transform = 'scale(1)';
+    }, 10);
+    
+    // Close modal function
+    function closeModal() {
+        modal.style.opacity = '0';
+        modalContent.style.transform = 'scale(0.8)';
+        setTimeout(() => {
+            if (modal.parentNode) {
+                modal.parentNode.removeChild(modal);
+            }
+        }, 300);
+    }
+    
+    // Event listeners
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+    
+    // Close on escape key
+    const escapeHandler = (e) => {
+        if (e.key === 'Escape') {
+            closeModal();
+            document.removeEventListener('keydown', escapeHandler);
+        }
+    };
+    document.addEventListener('keydown', escapeHandler);
+}
