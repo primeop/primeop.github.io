@@ -846,6 +846,31 @@ section {
     animation: pulse-bullet 2s infinite;
 }
 
+.job-description ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.job-description ul li {
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+.job-description ul li::before {
+    content: '▶';
+    position: absolute;
+    left: 0;
+    top: 2px;
+    color: #00d4aa;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(0, 212, 170, 0.5);
+    animation: pulse-bullet 2s infinite;
+}
+
 @keyframes pulse-bullet {
     0%, 100% {
         opacity: 1;

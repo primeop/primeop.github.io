@@ -222,12 +222,18 @@
                         <div class="company-icon">
                             <img src="keck job.jpg" alt="Keck Medicine of USC" class="company-logo">
                         </div>
-                        <h3>Cloud Security Intern</h3>
+                        <h3>Security Engineer Intern</h3>
                         <h4>Keck Medicine of USC</h4>
-                        <p class="timeline-date">October 2024 - Present</p>
+                        <p class="timeline-date">October 2024 – May 2026</p>
                         <div class="job-description">
-                            <p>At Keck Medicine, I co-developed the Keck Cloud Portal, an internal tool for secure cloud workload deployments leveraging Golang, Terraform, AWS Lambda, and policy-as-code, reducing provisioning time by 40%. I designed AWS security architectures with GuardDuty, CloudWatch, and Security Hub, cutting response time by 60% and costs by 25%, while automating remediation with Python Lambdas to eliminate 80% of manual triage.</p>
-                            <p>I also implemented reusable Terraform modules and AWS Config Rules for CSPM, reducing misconfigurations by 40%, built HIPAA/CMMC compliance automation pipelines, and collaborated with Azure and AWS teams to standardize IAM policies across multi-cloud environments.</p>
+                            <ul>
+                                <li>Built and secured a <strong>Go REST API</strong> (~20 endpoints) with Azure AD OAuth2, JWT, and RBAC powering the Keck Cloud Portal for ~40 engineers, enforcing object-level least-privilege over ~1,000 onboarding records and S3 documents.</li>
+                                <li>Discovered and remediated an <strong>IDOR / broken object-level authorization</strong> flaw during internal AppSec testing — added server-side ownership checks and RBAC validation on every object-access endpoint before production rollout.</li>
+                                <li>Co-developed the <strong>Keck Cloud Portal</strong> (Terraform, AWS Lambda, policy-as-code), adopted by 3–5 teams to onboard ~40 workloads, cutting secure provisioning time from 2–3 days to under 1 day.</li>
+                                <li>Automated compliance evaluation of 100+ AWS resources against <strong>HIPAA, HITRUST, CIS, NIST, and CMMC</strong> using Terraform IaC and AWS Config Rules, reducing manual effort ~25%.</li>
+                                <li>Built <strong>Python Lambda automation</strong> for Security Hub finding enrichment, alert routing, and remediation playbooks — handling ~65% of routine findings and saving ~10 hrs/week of manual triage.</li>
+                                <li>Built a <strong>GPT-powered AI triage assistant</strong> (OpenAI API on AWS) that summarized ~75 Security Hub / GuardDuty findings/day, cutting analyst triage time from ~12 to ~4 minutes per finding.</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -237,12 +243,15 @@
                         <div class="company-icon">
                             <img src="oracle job1.jpg" alt="Oracle Corporation" class="company-logo">
                         </div>
-                        <h3>Cloud Solution Engineer</h3>
-                        <h4>Oracle Corporation - JAPAC</h4>
-                        <p class="timeline-date">September 2022 - July 2024</p>
+                        <h3>Associate Cloud Solution Engineer</h3>
+                        <h4>Oracle Corporation – JAPAC</h4>
+                        <p class="timeline-date">September 2022 – July 2024</p>
                         <div class="job-description">
-                            <p>At Oracle, I migrated 20+ enterprise workloads to OCI, Kubernetes, and Docker, implementing DLP, segmentation, and threat monitoring to reduce misconfigurations by 90%. I embedded DevSecOps practices into CI/CD pipelines with OCI DevOps and Terraform, adding SAST, IaC validation, and automated scanning, reducing release risk by 30%.</p>
-                            <p>I conducted cloud security assessments, enforced least privilege with IAM and Cloud Guard, and designed resilient IaaS/PaaS architectures with DR, HA, and encrypted backups. Additionally, I created POCs and demos (OCI DevOps pipelines, AVDF, ZDLR Service), driving $5M+ revenue impact across JAPAC enterprise clients.</p>
+                            <ul>
+                                <li>Integrated <strong>security controls across ~12 CI/CD pipelines</strong> (SAST, IaC validation, policy enforcement) for 4 engineering teams, reducing security issues reaching pre-production by ~25%.</li>
+                                <li>Migrated 20+ enterprise workloads to <strong>OCI (Kubernetes, Docker)</strong> with near-zero unplanned downtime — applied network segmentation and DLP controls, cutting manual provisioning effort ~30%.</li>
+                                <li>Performed <strong>cloud security assessments</strong> and configured IAM policies, Cloud Guard rules, and identity federation to enforce least privilege across multi-tenant environments.</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -252,12 +261,14 @@
                         <div class="company-icon">
                             <img src="stqc job.png" alt="STQC Directorate" class="company-logo">
                         </div>
-                        <h3>Cybersecurity Intern</h3>
+                        <h3>Cybersecurity Intern – VAPT</h3>
                         <h4>STQC Directorate w/ IISc Bangalore</h4>
-                        <p class="timeline-date">May 2021 - August 2021</p>
+                        <p class="timeline-date">May 2021 – August 2021</p>
                         <div class="job-description">
-                            <p>At STQC, I performed penetration testing and VAPT of the Govt. of India's Indian Urban Data Exchange application using Burp Suite, ZAP, Postman, and Nmap, identifying critical flaws and strengthening compliance with national standards. I applied OWASP ASVS, CWE Top 25, OWASP Top 10, MITRE ATT&CK, and NIST SP 800-63 for systematic threat analysis.</p>
-                            <p>I documented mitigation strategies for high-risk vulnerabilities, and conducted code reviews to uncover insecure input handling, SQLi, XSS, IDOR, and broken access controls, recommending remediations aligned with secure coding best practices.</p>
+                            <ul>
+                                <li>Performed <strong>API security testing</strong> on the Govt. of India's IUDX platform using Burp Suite, OWASP ZAP, Postman, and Nmap — fuzzing endpoints and manipulating requests to surface auth and access-boundary flaws.</li>
+                                <li>Identified and mitigated <strong>OWASP Top 10 risks</strong> (SQLi, XSS, IDOR, broken authentication, session flaws) with root-cause analysis and secure-coding recommendations aligned to OWASP ASVS and NIST.</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
