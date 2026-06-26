@@ -252,7 +252,7 @@ const timelineObserver = new IntersectionObserver((entries) => {
             }, index * 200);
         }
     });
-}, { threshold: 0.3 });
+}, { threshold: 0.05, rootMargin: '0px 0px -50px 0px' });
 
 timelineItems.forEach((item, index) => {
     item.style.opacity = '0';

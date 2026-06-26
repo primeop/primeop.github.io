@@ -846,6 +846,30 @@ section {
     animation: pulse-bullet 2s infinite;
 }
 
+.tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0 16px 0;
+}
+
+.tech-tag {
+    background: rgba(0, 212, 170, 0.1);
+    border: 1px solid rgba(0, 212, 170, 0.35);
+    color: #00d4aa;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.03em;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.tech-tag:hover {
+    background: rgba(0, 212, 170, 0.2);
+    border-color: #00d4aa;
+}
+
 .job-description ul {
     list-style: none;
     padding: 0;
