@@ -73,7 +73,7 @@
                 </div>
 
                 <p class="hero-description">
-                    Focused on securing cloud-native applications, REST APIs, and auth flows. Building and hardening Go and Python services, embedding security into CI/CD, and enforcing least-privilege access across AWS, Azure, and multi-cloud with Terraform and policy-as-code.
+                    Securing cloud-native apps, REST APIs, and auth flows. Go · Python · AWS · Terraform · DevSecOps.
                 </p>
                 <div class="hero-buttons">
                     <a href="#projects" class="btn btn-primary">View My Work</a>
@@ -107,21 +107,13 @@
             <div class="about-content">
                 <div class="about-text">
                     <p>
-                        Application and cloud security engineer with an M.S. in Cybersecurity from USC (GPA 3.9, May 2026).
-                        I focus on securing cloud-native applications and REST APIs — building and hardening Go and Python services,
-                        embedding security into CI/CD pipelines, and enforcing least-privilege access across AWS, Azure, and multi-cloud
-                        environments with Terraform and policy-as-code.
+                        M.S. Cybersecurity @ USC (GPA 3.9, 2026). I build and secure cloud-native APIs, embed security into CI/CD, and enforce least-privilege access across AWS, Azure, and multi-cloud with Terraform and policy-as-code.
                     </p>
                     <p>
-                        At Keck Medicine of USC, I built and secured a Go REST API with Azure AD OAuth2, JWT, and RBAC,
-                        discovered and remediated an IDOR flaw pre-production, and automated compliance evaluation of 100+ AWS resources
-                        against HIPAA, HITRUST, CIS, NIST, and CMMC baselines. I also built a GPT-powered AI triage assistant
-                        cutting analyst triage time from ~12 to ~4 minutes per finding.
+                        At Keck Medicine, I secured a Go REST API (OAuth2/JWT/RBAC), caught and fixed an IDOR pre-production, automated HIPAA/NIST compliance for 100+ AWS resources, and shipped a GPT triage assistant cutting analyst time from 12 → 4 min/finding.
                     </p>
                     <p>
-                        Previously at Oracle (JAPAC), I integrated security controls across 12 CI/CD pipelines for 4 engineering teams,
-                        migrated 20+ enterprise workloads to OCI with network segmentation and DLP controls, and configured IAM policies
-                        and Cloud Guard rules to enforce least privilege across multi-tenant environments.
+                        At Oracle JAPAC, I hardened 12 CI/CD pipelines, migrated 20+ workloads to OCI with segmentation and DLP, and configured IAM and Cloud Guard for least-privilege across multi-tenant environments.
                     </p>
                     <div class="about-stats">
                         <div class="stat">
@@ -240,12 +232,11 @@
                         </div>
                         <div class="job-description">
                             <ul>
-                                <li>Built and secured a <strong>Go REST API</strong> (~20 endpoints) with Azure AD OAuth2, JWT, and RBAC powering the Keck Cloud Portal for ~40 engineers, enforcing object-level least-privilege over ~1,000 onboarding records and S3 documents.</li>
-                                <li>Discovered and remediated an <strong>IDOR / broken object-level authorization</strong> flaw during internal AppSec testing — added server-side ownership checks and RBAC validation on every object-access endpoint before production rollout.</li>
-                                <li>Co-developed the <strong>Keck Cloud Portal</strong> (Terraform, AWS Lambda, policy-as-code), adopted by 3–5 teams to onboard ~40 workloads, cutting secure provisioning time from 2–3 days to under 1 day.</li>
-                                <li>Automated compliance evaluation of 100+ AWS resources against <strong>HIPAA, HITRUST, CIS, NIST, and CMMC</strong> using Terraform IaC and AWS Config Rules, reducing manual effort ~25%.</li>
-                                <li>Built <strong>Python Lambda automation</strong> for Security Hub finding enrichment, alert routing, and remediation playbooks — handling ~65% of routine findings and saving ~10 hrs/week of manual triage.</li>
-                                <li>Built a <strong>GPT-powered AI triage assistant</strong> (OpenAI API on AWS) that summarized ~75 Security Hub / GuardDuty findings/day, cutting analyst triage time from ~12 to ~4 minutes per finding.</li>
+                                <li>Built and secured a <strong>Go REST API</strong> (OAuth2, JWT, RBAC) powering the Keck Cloud Portal for ~40 engineers with object-level least-privilege over ~1,000 records.</li>
+                                <li>Found and fixed an <strong>IDOR flaw</strong> pre-production — added server-side ownership checks and RBAC validation on every object-access endpoint.</li>
+                                <li>Co-built the <strong>Keck Cloud Portal</strong> (Terraform, Lambda, policy-as-code) — cut secure onboarding from 2–3 days to under 1 day.</li>
+                                <li>Automated <strong>HIPAA / NIST / CIS compliance</strong> for 100+ AWS resources via IaC and Config Rules, reducing manual effort ~25%.</li>
+                                <li>Built a <strong>GPT triage assistant</strong> on AWS — cut analyst time per finding from ~12 to ~4 minutes.</li>
                             </ul>
                         </div>
                     </div>
@@ -271,9 +262,9 @@
                         </div>
                         <div class="job-description">
                             <ul>
-                                <li>Integrated <strong>security controls across ~12 CI/CD pipelines</strong> (SAST, IaC validation, policy enforcement) for 4 engineering teams, reducing security issues reaching pre-production by ~25%.</li>
-                                <li>Migrated 20+ enterprise workloads to <strong>OCI (Kubernetes, Docker)</strong> with near-zero unplanned downtime — applied network segmentation and DLP controls, cutting manual provisioning effort ~30%.</li>
-                                <li>Performed <strong>cloud security assessments</strong> and configured IAM policies, Cloud Guard rules, and identity federation to enforce least privilege across multi-tenant environments.</li>
+                                <li>Embedded <strong>SAST, IaC validation, and policy gates</strong> across 12 CI/CD pipelines for 4 teams — cut pre-production security issues by ~25%.</li>
+                                <li>Migrated 20+ workloads to <strong>OCI</strong> (Kubernetes, Docker) with network segmentation and DLP, cutting provisioning effort ~30%.</li>
+                                <li>Configured <strong>IAM, Cloud Guard, and identity federation</strong> to enforce least privilege across multi-tenant OCI environments.</li>
                             </ul>
                         </div>
                     </div>
@@ -297,8 +288,8 @@
                         </div>
                         <div class="job-description">
                             <ul>
-                                <li>Performed <strong>API security testing</strong> on the Govt. of India's IUDX platform using Burp Suite, OWASP ZAP, Postman, and Nmap — fuzzing endpoints and manipulating requests to surface auth and access-boundary flaws.</li>
-                                <li>Identified and mitigated <strong>OWASP Top 10 risks</strong> (SQLi, XSS, IDOR, broken authentication, session flaws) with root-cause analysis and secure-coding recommendations aligned to OWASP ASVS and NIST.</li>
+                                <li><strong>API security testing</strong> on India's IUDX govt. platform — fuzz-tested endpoints, surfaced auth and access-boundary flaws.</li>
+                                <li>Identified and mitigated <strong>OWASP Top 10</strong> risks (SQLi, XSS, IDOR, broken auth) with ASVS-aligned recommendations.</li>
                             </ul>
                         </div>
                     </div>
