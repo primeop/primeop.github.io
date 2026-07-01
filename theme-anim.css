@@ -199,7 +199,7 @@ section, footer { background: transparent !important; }
 .nav-link:hover { color: var(--text-primary) !important; background: rgba(255, 255, 255, .05); }
 .nav-link::after { display: none !important; }
 /* letter-roll hover */
-.hover-link { position: relative; display: inline-flex; overflow: hidden; }
+.hover-mask { display: inline-block; overflow: hidden; position: relative; line-height: 1.3; }
 .hover-in { position: relative; display: inline-block; transition: transform .3s var(--ease-out); }
 .hover-in > .hover-dup { position: absolute; top: 100%; left: 0; color: var(--accent); }
 .hover-link:hover .hover-in { transform: translateY(-100%); }

@@ -107,8 +107,8 @@
         document.querySelectorAll('.nav-link').forEach(function (a) {
             var text = a.textContent.trim();
             a.classList.add('hover-link');
-            a.innerHTML = '<span class="hover-in">' + text +
-                '<span class="hover-dup">' + text + '</span></span>';
+            a.innerHTML = '<span class="hover-mask"><span class="hover-in">' + text +
+                '<span class="hover-dup">' + text + '</span></span></span>';
         });
         var fade = document.createElement('div');
         fade.className = 'nav-fade';
