@@ -229,7 +229,8 @@
         var W = mount.clientWidth, H = mount.clientHeight;
         var scene = new THREE.Scene();
         var camera = new THREE.PerspectiveCamera(38, W / H, 0.1, 100);
-        camera.position.set(0, 1.25, 5.2);
+        camera.position.set(0, 0.35, 5.8);
+        camera.lookAt(0, 0.05, 0);
         var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(W, H);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
