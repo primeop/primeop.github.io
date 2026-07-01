@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kamalesh Jayapandiaraj Arumugam - Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Hacker Character -->
+    <div class="hacker-character">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <!-- Head -->
+            <circle cx="50" cy="30" r="15" fill="#00d4aa" opacity="0.8"/>
+            <!-- Visor/Glasses -->
+            <rect x="40" y="25" width="8" height="8" fill="#000" rx="2"/>
+            <rect x="52" y="25" width="8" height="8" fill="#000" rx="2"/>
+            <line x1="48" y1="29" x2="52" y2="29" stroke="#000" stroke-width="1"/>
+            <!-- Body -->
+            <rect x="42" y="48" width="16" height="20" fill="#00d4aa" opacity="0.7" rx="2"/>
+            <!-- Arms -->
+            <line x1="42" y1="55" x2="30" y2="60" stroke="#00d4aa" stroke-width="3" stroke-linecap="round"/>
+            <line x1="58" y1="55" x2="70" y2="60" stroke="#00d4aa" stroke-width="3" stroke-linecap="round"/>
+            <!-- Legs -->
+            <line x1="45" y1="68" x2="42" y2="85" stroke="#00d4aa" stroke-width="3" stroke-linecap="round"/>
+            <line x1="55" y1="68" x2="58" y2="85" stroke="#00d4aa" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+    </div>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span>AKJ</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#home" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#about" class="nav-link">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#highlights" class="nav-link">Highlights</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#experience" class="nav-link">Experience</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#skills" class="nav-link">Skills</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#certificates" class="nav-link">Certificates</a>
+                </li>
+                                 <li class="nav-item">
+                     <a href="#projects" class="nav-link">Projects</a>
+                 </li>
+                 <li class="nav-item">
+                     <a href="#research" class="nav-link">Research</a>
+                 </li>
+                 <li class="nav-item">
+                     <a href="#contact" class="nav-link">Contact</a>
+                 </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+
+        
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-keywords">
+                    <span>AppSec</span>
+                    <span class="dot">•</span>
+                    <span>Cloud Security</span>
+                    <span class="dot">•</span>
+                    <span>API Security</span>
+                    <span class="dot">•</span>
+                    <span>DevSecOps</span>
+                </h1>
+                <h2 class="hero-subtitle">Application & Cloud Security Engineer</h2>
+
+                <p class="hero-description">
+                    Securing cloud-native apps, REST APIs, and auth flows.<br>Go · Python · AWS · Terraform
+                </p>
+                <div class="hero-buttons">
+                    <a href="#projects" class="btn btn-primary">View My Work</a>
+                    <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+                    <a href="Kamalesh_Jayapandiaraj_Arumugam_Resume.pdf" class="btn btn-secondary" download>
+                        <i class="fas fa-download"></i> Download Resume
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="profile-card">
+                    <div class="profile-avatar">
+                        <img src="dp.jpg" alt="Kamalesh Jayapandiaraj Arumugam" class="profile-image">
+                    </div>
+                    <div class="profile-info">
+                        <h3>Kamalesh Jayapandiaraj Arumugam</h3>
+                        <p>Application & Cloud Security Engineer</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>
+                        M.S. Cybersecurity @ USC (GPA 3.9, 2026). I build and secure cloud-native APIs, embed security into CI/CD, and enforce least-privilege access across AWS, Azure, and multi-cloud with Terraform and policy-as-code.
+                    </p>
+                    <p>
+                        At Keck Medicine, I secured a Go REST API (OAuth2/JWT/RBAC), caught and fixed an IDOR pre-production, automated HIPAA/NIST compliance for 100+ AWS resources, and shipped a GPT triage assistant that cut analyst triage time by 67% per finding.
+                    </p>
+                    <p>
+                        At Oracle JAPAC, I hardened 12 CI/CD pipelines, migrated 20+ workloads to OCI with network segmentation and DLP, and configured IAM and Cloud Guard for least-privilege across multi-tenant environments.
+                    </p>
+                    <div class="about-stats">
+                        <div class="stat">
+                            <span class="stat-number">3+</span>
+                            <span class="stat-label">Years Experience</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">10+</span>
+                            <span class="stat-label">Security Projects</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">5+</span>
+                            <span class="stat-label">Certifications</span>
+                        </div>
+                    </div>
+                </div>
+                                     <div class="about-image">
+                                          <div class="about-card">
+                          <div class="card-background">
+                              <img src="red-team-vs-blue-team-with-laptops.jpg" alt="Red Team vs Blue Team" class="team-background">
+                              <div class="image-overlay"></div>
+                          </div>
+                      </div>
+                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Highlights Section -->
+    <section id="highlights" class="highlights">
+        <div class="container">
+            <h2 class="section-title">🏆 Highlights</h2>
+            <div class="highlights-grid">
+                <div class="highlight-card">
+                    <div class="highlight-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="highlight-content">
+                        <h3>🏆 25th / 143 @ Amazon AppSec CTF</h3>
+                        <p>48-hr invitational covering secure coding, Web, Cloud, and AI security. Top 25 in NAMER.</p>
+                        <div class="highlight-badge">
+                            <button onclick="openCertificate('Certificate-theycallmeprim30p_page-0001.jpg')" class="cert-button">
+                                <i class="fas fa-certificate"></i>
+                                <span>View Cert</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="highlight-card">
+                    <div class="highlight-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="highlight-content">
+                        <h3>🛡️ Top 10 @ WRCCDC 2026</h3>
+                        <p>Defended enterprise systems in a live attack scenario; SIEM, firewall hardening, and incident response.</p>
+                        <div class="highlight-badge">
+                            <i class="fas fa-star"></i>
+                            <span>Leadership</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="highlight-card">
+                    <div class="highlight-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="highlight-content">
+                        <h3>🥈 2nd Runner-Up @ USC CTF (Fall 2024)</h3>
+                        <p>Web security, forensics, reverse engineering, and cryptography challenges.</p>
+                        <div class="highlight-badge">
+                            <i class="fas fa-medal"></i>
+                            <span>Achievement</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="highlight-card">
+                    <div class="highlight-icon">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <div class="highlight-content">
+                        <h3>🥈 2nd Place @ Tenable × CRACCON 2025 Cloud CTF</h3>
+                        <p>Cloud exposure analysis, CNAPP security, and IAM misconfiguration challenges.</p>
+                        <div class="highlight-badge">
+                            <i class="fas fa-medal"></i>
+                            <span>Achievement</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="highlight-card">
+                    <div class="highlight-icon">
+                        <i class="fas fa-user-secret"></i>
+                    </div>
+                    <div class="highlight-content">
+                        <h3>🔴 Offensive Security @ CPTC 2025</h3>
+                        <p>Represented USC in a real-world enterprise penetration testing competition.</p>
+                        <div class="highlight-badge">
+                            <i class="fas fa-crosshairs"></i>
+                            <span>Red Team</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="highlight-card">
+                    <div class="highlight-icon">
+                        <i class="fas fa-satellite"></i>
+                    </div>
+                    <div class="highlight-content">
+                        <h3>🛰️ Satellite Cybersecurity Research @ USC</h3>
+                        <p>SPARTA-based threat modeling of adversarial space-ground cyber operations. (ongoing)</p>
+                        <div class="highlight-badge">
+                            <i class="fas fa-flask"></i>
+                            <span>Research</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="experience">
+        <div class="container">
+            <h2 class="section-title">Experience</h2>
+            <div class="accordion-container">
+                <!-- Keck Medicine -->
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title-row">
+                            <div class="accordion-title-text">
+                                <h3>Cloud Security Engineer Intern</h3>
+                                <h4>Keck Medicine of USC</h4>
+                                <p class="accordion-date">October 2024 – May 2026 | Los Angeles, CA</p>
+                            </div>
+                            <span class="accordion-icon">+</span>
+                        </div>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="tech-tags">
+                            <span class="tech-tag">Go</span>
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">AWS</span>
+                            <span class="tech-tag">Azure AD</span>
+                            <span class="tech-tag">OAuth2</span>
+                            <span class="tech-tag">Terraform</span>
+                            <span class="tech-tag">Lambda</span>
+                            <span class="tech-tag">AppSec</span>
+                        </div>
+                        <div class="accordion-details">
+                            <ul>
+                                <li>Built and secured a <strong>Go REST API</strong> (20 endpoints; Azure AD OAuth2, JWT, RBAC) powering the Keck Cloud Portal for 40+ cloud, infrastructure, and security engineers, enforcing object-level least-privilege access over 1,000+ S3-hosted documents.</li>
+                                <li>Discovered and remediated an <strong>IDOR / broken object-level authorization flaw</strong> during internal AppSec testing that could have exposed 1,000+ cross-user onboarding requests, approvals, and documents; added server-side ownership checks and RBAC validation on every object-access endpoint, closing the gap pre-production with no known exploitation.</li>
+                                <li>Co-developed the <strong>Keck Cloud Portal</strong>, a security-by-default provisioning platform (Terraform, AWS Lambda, policy-as-code) adopted by 3-5 teams to onboard 40+ cloud workloads, cutting secure onboarding time from 2-3 days to under 1 day.</li>
+                                <li>Automated continuous compliance evaluation of 100+ AWS resources against <strong>HIPAA, HITRUST, CIS, NIST, and CMMC</strong> baselines using Terraform IaC and AWS Config Rules, reducing manual compliance effort by 25%.</li>
+                                <li>Built <strong>Python Lambda automation</strong> for Security Hub finding enrichment, alert routing, and remediation playbooks, handling 65% of routine cloud security findings and removing 10 hours/week of manual triage.</li>
+                                <li>Built a <strong>GPT-powered AI triage assistant</strong> (OpenAI API on AWS) that summarized and prioritized 75 Security Hub, GuardDuty, and Config findings/day into natural-language remediation guidance, reducing analyst triage time by 67% per finding.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Oracle -->
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title-row">
+                            <div class="accordion-title-text">
+                                <h3>Associate Cloud Engineer – JAPAC</h3>
+                                <h4>Oracle Corporation</h4>
+                                <p class="accordion-date">September 2022 – July 2024 | Bangalore, India</p>
+                            </div>
+                            <span class="accordion-icon">+</span>
+                        </div>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="tech-tags">
+                            <span class="tech-tag">OCI</span>
+                            <span class="tech-tag">Cloud Guard</span>
+                            <span class="tech-tag">IAM</span>
+                            <span class="tech-tag">Kubernetes</span>
+                            <span class="tech-tag">Docker</span>
+                            <span class="tech-tag">Terraform</span>
+                            <span class="tech-tag">CI/CD</span>
+                            <span class="tech-tag">DevSecOps</span>
+                        </div>
+                        <div class="accordion-details">
+                            <ul>
+                                <li>Audited <strong>IAM across 10+ OCI tenancies</strong> via Cloud Guard, replacing standing admin with just-in-time privileged access and remediating over-privileged roles, wildcard policy statements, and weak federation trust configs, cutting standing privileged access by 90%.</li>
+                                <li>Embedded <strong>SAST, IaC validation, and policy-as-code gates</strong> into 12 CI/CD pipelines across 4 engineering teams, blocking misconfigurations and policy violations pre-merge and reducing security issues reaching pre-production by 25%.</li>
+                                <li>Stood up <strong>Cloud Guard detector and responder recipes</strong> mapped to the CIS OCI Benchmark, driving misconfiguration remediation across 15 compartments and raising conformance from 58% to 96%.</li>
+                                <li>Hardened 20+ migrated OCI workloads (Kubernetes, Docker) with NSG least-privilege rules, network segmentation, and centralized secrets/key management via OCI Vault and KMS, eliminating hardcoded credentials and enforcing encryption-at-rest across multi-tenant environments.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STQC -->
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title-row">
+                            <div class="accordion-title-text">
+                                <h3>Cybersecurity Intern – Vulnerability Assessment & Penetration Testing</h3>
+                                <h4>STQC Directorate w/ IISc Bangalore</h4>
+                                <p class="accordion-date">May 2021 – August 2021 | Bangalore, India</p>
+                            </div>
+                            <span class="accordion-icon">+</span>
+                        </div>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="tech-tags">
+                            <span class="tech-tag">Burp Suite</span>
+                            <span class="tech-tag">OWASP ZAP</span>
+                            <span class="tech-tag">Nmap</span>
+                            <span class="tech-tag">Postman</span>
+                            <span class="tech-tag">OWASP Top 10</span>
+                            <span class="tech-tag">ASVS</span>
+                        </div>
+                        <div class="accordion-details">
+                            <ul>
+                                <li>Performed <strong>API security testing</strong> on the Govt. of India's Indian Urban Data Exchange (IUDX) platform using Burp Suite, OWASP ZAP, Postman, and Nmap; fuzzing endpoints and manipulating requests to surface flaws across APIs, auth flows, and access boundaries.</li>
+                                <li>Analyzed and mitigated <strong>OWASP Top 10 risks</strong> (SQLi, XSS, IDOR, broken authentication, session flaws) with root-cause analysis and secure-coding recommendations aligned to OWASP ASVS and NIST.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="skills">
+        <div class="container">
+            <h2 class="section-title">🛠️ Tech Stack</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Programming & Cloud</h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <i class="fab fa-python"></i>
+                            <span>Python</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-database"></i>
+                            <span>SQL</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-java"></i>
+                            <span>Java</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-code"></i>
+                            <span>C++</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-php"></i>
+                            <span>PHP</span>
+                        </div>
+                                                 <div class="skill-item">
+                             <i class="fab fa-aws"></i>
+                             <span>AWS</span>
+                         </div>
+                                                  <div class="skill-item">
+                              <i class="fab fa-microsoft"></i>
+                              <span>Azure</span>
+                          </div>
+                          <div class="skill-item">
+                              <i class="fas fa-cloud"></i>
+                              <span>OCI</span>
+                          </div>
+                          <div class="skill-item">
+                              <i class="fab fa-docker"></i>
+                              <span>Docker</span>
+                          </div>
+                          <div class="skill-item">
+                              <i class="fab fa-linux"></i>
+                              <span>Linux Bash</span>
+                          </div>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>Security Tools</h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <i class="fas fa-network-wired"></i>
+                            <span>Wireshark</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-bug"></i>
+                            <span>Burp Suite</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-search"></i>
+                            <span>Nmap</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-terminal"></i>
+                            <span>Metasploit</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Snort</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-search-plus"></i>
+                            <span>Nessus</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-paper-plane"></i>
+                            <span>Postman</span>
+                        </div>
+                                                 <div class="skill-item">
+                             <i class="fas fa-code"></i>
+                             <span>Ghidra</span>
+                         </div>
+                                                   <div class="skill-item">
+                              <i class="fab fa-microsoft"></i>
+                              <span>Active Directory</span>
+                          </div>
+                          <div class="skill-item">
+                              <i class="fas fa-sitemap"></i>
+                              <span>BloodHound</span>
+                          </div>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>Infrastructure & DevOps</h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <i class="fab fa-docker"></i>
+                            <span>Docker</span>
+                        </div>
+                                                 <div class="skill-item">
+                             <i class="fab fa-git-alt"></i>
+                             <span>GitHub Actions</span>
+                         </div>
+                        <div class="skill-item">
+                            <i class="fas fa-cogs"></i>
+                            <span>Terraform</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-server"></i>
+                            <span>Kubernetes</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-tools"></i>
+                            <span>Ansible</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-linux"></i>
+                            <span>Linux</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Certificates Section -->
+    <section id="certificates" class="certificates">
+        <div class="container">
+            <h2 class="section-title">Certifications</h2>
+            <div class="certificates-grid">
+                <div class="certificate-card featured">
+                    <div class="certificate-icon">
+                        <img src="oscp.png" alt="OSCP Certification" class="certificate-logo">
+                    </div>
+                    <div class="certificate-content">
+                        <h3>OSCP (Offensive Security Certified Professional)</h3>
+                        <p class="certificate-status">Expected July 2026</p>
+                        <p class="certificate-description">Advanced penetration testing certification focusing on practical offensive security skills and real-world exploitation techniques.</p>
+                        <div class="certificate-badge">
+                            <i class="fas fa-star"></i>
+                            <span>In Progress</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="certificate-card">
+                    <div class="certificate-icon">
+                        <img src="ejpt-certification.svg" alt="eJPT Certification" class="certificate-logo">
+                    </div>
+                    <div class="certificate-content">
+                        <h3>eJPT</h3>
+                        <p class="certificate-status">Completed</p>
+                        <p class="certificate-description">Junior Penetration Tester certification covering web application security and network penetration testing fundamentals.</p>
+                    </div>
+                </div>
+                <div class="certificate-card">
+                    <div class="certificate-icon">
+                        <img src="SecurityPlus Logo Certified CE.png" alt="CompTIA Security+" class="certificate-logo">
+                    </div>
+                    <div class="certificate-content">
+                        <h3>CompTIA Security+</h3>
+                        <p class="certificate-status">Completed</p>
+                        <p class="certificate-description">Comprehensive security certification covering network security, compliance, and operational security.</p>
+                    </div>
+                </div>
+                <div class="certificate-card">
+                    <div class="certificate-icon">
+                        <img src="sc 900.png" alt="Azure SC-900" class="certificate-logo">
+                    </div>
+                    <div class="certificate-content">
+                        <h3>Azure SC-900</h3>
+                        <p class="certificate-status">Completed</p>
+                        <p class="certificate-description">Microsoft Security, Compliance, and Identity Fundamentals certification.</p>
+                    </div>
+                </div>
+                <div class="certificate-card oci-certificate">
+                    <div class="certificate-icon">
+                        <img src="oci architect pro.png" alt="OCI Architect Professional" class="certificate-logo">
+                    </div>
+                    <div class="certificate-content">
+                        <h3>OCI Architect Professional</h3>
+                        <p class="certificate-status">Completed</p>
+                        <p class="certificate-description">Oracle Cloud Infrastructure Architect Professional certification.</p>
+                    </div>
+                </div>
+                <div class="certificate-card">
+                    <div class="certificate-icon">
+                        <img src="oracle db cert logo.png" alt="Oracle APEX Cloud Developer" class="certificate-logo">
+                    </div>
+                    <div class="certificate-content">
+                        <h3>Oracle APEX Cloud Developer Certified Professional</h3>
+                        <p class="certificate-status">Completed</p>
+                        <p class="certificate-description">Oracle APEX Cloud Developer certification for building modern web applications.</p>
+                    </div>
+                </div>
+                <div class="certificate-card">
+                    <div class="certificate-icon">
+                        <img src="oracle db cert logo.png" alt="Oracle Autonomous Database" class="certificate-logo">
+                    </div>
+                    <div class="certificate-content">
+                        <h3>Oracle Autonomous Database Cloud 2022 Certified Professional</h3>
+                        <p class="certificate-status">Completed</p>
+                        <p class="certificate-description">Oracle Autonomous Database Cloud certification for database administration and management.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="projects">
+        <div class="container">
+            <h2 class="section-title">Featured Projects</h2>
+            <div class="projects-grid">
+                                 <div class="project-card">
+                     <div class="project-image">
+                         <div class="project-overlay" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6);">
+                             <i class="fas fa-shield-alt"></i>
+                         </div>
+                     </div>
+                    <div class="project-content">
+                        <h3>SIEM Implementation with Suricata and Elastic Stack</h3>
+                        <p>Custom SIEM pipeline with Suricata IDS and Elastic Stack for real-time detection, log correlation, and threat triaging.</p>
+                                                 <div class="project-tech">
+                             <span>Suricata</span>
+                             <span>Elastic Stack</span>
+                             <span>MITRE ATT&CK</span>
+                         </div>
+                         <div class="project-links">
+                             <a href="https://github.com/primeop/SIEM-with-Suricata" class="project-link" target="_blank"><i class="fab fa-github"></i> View Code</a>
+                         </div>
+                    </div>
+                </div>
+                                 <div class="project-card">
+                     <div class="project-image">
+                         <div class="project-overlay" style="background: linear-gradient(135deg, #065f46, #10b981);">
+                             <i class="fas fa-lock"></i>
+                         </div>
+                     </div>
+                    <div class="project-content">
+                        <h3>Secure SDLC & DevSecOps Pipeline</h3>
+                        <p>GitHub Actions pipeline with Semgrep, OWASP ZAP, and Trivy for SAST/DAST/container scanning and SBOM generation.</p>
+                                                 <div class="project-tech">
+                             <span>Semgrep</span>
+                             <span>OWASP ZAP</span>
+                             <span>Trivy</span>
+                         </div>
+                         <div class="project-links">
+                             <a href="https://github.com/primeop/Secure-SDLC-DevSecOps-Pipeline" class="project-link" target="_blank"><i class="fab fa-github"></i> View Code</a>
+                         </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">
+                        <div class="project-overlay" style="background: linear-gradient(135deg, #00d4aa, #0099cc);">
+                            <i class="fas fa-key"></i>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>Authorization Testing Framework for REST APIs</h3>
+                        <p>Go-based test harness automating BOLA/IDOR and broken-function-level authorization testing; walks object IDs across user contexts to surface privilege-escalation gaps.</p>
+                        <div class="project-tech">
+                            <span>Go</span>
+                            <span>REST APIs</span>
+                            <span>OWASP API Top 10</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://github.com/primeop/authorization-testing-framework" class="project-link" target="_blank"><i class="fab fa-github"></i> View Code</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">
+                        <div class="project-overlay" style="background: linear-gradient(135deg, #ff6b6b, #ffa500);">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>LLM Application Security Test Harness</h3>
+                        <p>Red-team harness probing LLM-backed applications for prompt injection, jailbreak, and tool-abuse vectors; paired with layered defenses mapped to OWASP Top 10 for LLM Applications.</p>
+                        <div class="project-tech">
+                            <span>LLM Security</span>
+                            <span>Prompt Injection</span>
+                            <span>Defense</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://github.com/primeop/llm-security-test-harness" class="project-link" target="_blank"><i class="fab fa-github"></i> View Code</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">
+                        <div class="project-overlay" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                            <i class="fas fa-sitemap"></i>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>IAM Privilege-Escalation Path Analyzer</h3>
+                        <p>Policy-analysis tool ingesting AWS IAM policies; flags wildcards, over-permissive trust relationships, and known privilege-escalation chains codifying real-world cloud IAM misconfigurations.</p>
+                        <div class="project-tech">
+                            <span>AWS IAM</span>
+                            <span>Policy Analysis</span>
+                            <span>Privilege Escalation</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://github.com/primeop/iam-privilege-escalation-analyzer" class="project-link" target="_blank"><i class="fab fa-github"></i> View Code</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+         </section>
+ 
+     <!-- Research Papers and Other Projects Section -->
+     <section id="research" class="research">
+         <div class="container">
+             <h2 class="section-title">Research Papers & Other Projects</h2>
+             <div class="research-grid">
+                 <div class="research-card">
+                     <div class="research-icon">
+                         <i class="fas fa-file-alt"></i>
+                     </div>
+                     <div class="research-content">
+                         <h3>Behind the Cloud: Uncovering Critical Security Threats</h3>
+                         <p>Analyzing emerging cloud security vulnerabilities and mitigation strategies for enterprise environments.</p>
+                         <div class="research-links">
+                             <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5160686" class="research-link" target="_blank">
+                                 <i class="fas fa-external-link-alt"></i> View Paper
+                             </a>
+                         </div>
+                     </div>
+                 </div>
+                 <div class="research-card">
+                     <div class="research-icon">
+                         <i class="fas fa-heartbeat"></i>
+                     </div>
+                     <div class="research-content">
+                         <h3>Cloud, Care and Confidentiality: The Healthcare Data Security Dilemma</h3>
+                         <p>Data security challenges in healthcare cloud environments; HIPAA compliance and patient privacy.</p>
+                         <div class="research-links">
+                             <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5277766" class="research-link" target="_blank">
+                                 <i class="fas fa-external-link-alt"></i> View Paper
+                             </a>
+                         </div>
+                     </div>
+                 </div>
+                                   <div class="research-card">
+                      <div class="research-icon">
+                          <i class="fas fa-shield-virus"></i>
+                      </div>
+                      <div class="research-content">
+                          <h3>Cybersecurity Policy and HIPAA Compliance for Healthcare</h3>
+                          <p>HIPAA compliance framework with NIST SP 800-66 guidelines, threat assessment, and security controls roadmap for a healthcare organization.</p>
+                          <div class="research-links">
+                              <a href="https://github.com/primeop/CYBERSECURITY-POLICY-AND-HIPAA-COMPLIANCE-FOR-THE-CENTER" class="research-link" target="_blank">
+                                  <i class="fab fa-github"></i> View Project
+                              </a>
+                          </div>
+                      </div>
+                  </div>
+             </div>
+         </div>
+     </section>
+ 
+     <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>Let's Connect</h3>
+                    <p>Open to security engineering roles, AppSec consulting, and research collaborations. Let's talk.</p>
+                    <div class="contact-items">
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>karumuga@usc.edu</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>+1 (213) 691-4175</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Los Angeles, California, United States</span>
+                        </div>
+                    </div>
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/in/kamalesh-jayapandiaraj-arumugam/" class="social-link" target="_blank"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://github.com/primeop" class="social-link" target="_blank"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="contact-form" action="https://formspree.io/f/mrbagwjb" method="POST">
+                        <div class="form-group">
+                            <input type="text" name="name" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" name="email" placeholder="Your Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="subject" placeholder="Subject" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2026 Kamalesh Jayapandiaraj Arumugam. All rights reserved.</p>
+                <div class="footer-links">
+                                         <a href="#home">Home</a>
+                     <a href="#about">About</a>
+                     <a href="#highlights">Highlights</a>
+                     <a href="#projects">Projects</a>
+                     <a href="#research">Research</a>
+                     <a href="#contact">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
