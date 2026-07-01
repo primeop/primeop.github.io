@@ -141,6 +141,7 @@
             if (!grid) return;
             gsap.fromTo(grid.querySelectorAll(pair[1]), { y: 60, opacity: 0 }, {
                 y: 0, opacity: 1, duration: .8, stagger: .1, ease: 'power3.out',
+                clearProps: 'transform',
                 scrollTrigger: { trigger: grid, start: 'top 82%' }
             });
         });
@@ -149,6 +150,7 @@
         gsap.utils.toArray('.accordion-item').forEach(function (el, i) {
             gsap.fromTo(el, { x: -60, opacity: 0 }, {
                 x: 0, opacity: 1, duration: .7, delay: i * .05, ease: 'power3.out',
+                clearProps: 'transform',
                 scrollTrigger: { trigger: el, start: 'top 85%' }
             });
         });
@@ -158,6 +160,7 @@
         if (aboutImg) {
             gsap.fromTo(aboutImg, { x: 60, opacity: 0 }, {
                 x: 0, opacity: 1, duration: .9, ease: 'power3.out',
+                clearProps: 'transform',
                 scrollTrigger: { trigger: aboutImg, start: 'top 85%' }
             });
         }
@@ -251,99 +254,135 @@
         var char = new THREE.Group();
         var headGroup = new THREE.Group();
 
-        var skinMat = new THREE.MeshStandardMaterial({ color: 0xc98e63, roughness: .6 });
-        var darkMat = new THREE.MeshStandardMaterial({ color: 0x15181f, roughness: .55 });
-        var capMat = new THREE.MeshStandardMaterial({ color: 0xd8dde6, roughness: .4 });
-        var white = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: .3 });
-        var irisMat = new THREE.MeshStandardMaterial({ color: 0x4433aa, roughness: .25 });
+        var cloakMat = new THREE.MeshStandardMaterial({ color: 0x0d1017, roughness: .85, metalness: .05 });
+        var cloakInner = new THREE.MeshStandardMaterial({ color: 0x070a10, roughness: .95 });
+        var voidMat = new THREE.MeshBasicMaterial({ color: 0x01030a });
+        var eyeMat = new THREE.MeshBasicMaterial({ color: 0x5eead4 });
 
-        // head
-        var head = new THREE.Mesh(new THREE.SphereGeometry(.72, 40, 40), skinMat);
-        head.scale.set(1, 1.08, .95);
-        headGroup.add(head);
-        // ears
-        [-1, 1].forEach(function (s) {
-            var ear = new THREE.Mesh(new THREE.SphereGeometry(.16, 20, 20), skinMat);
-            ear.position.set(s * .70, 0, 0);
-            headGroup.add(ear);
-        });
-        // eyes
+        // ---- hood (lathe profile: opens toward camera) ----
+        var hoodPts = [];
+        [[0, .62], [.30, .58], [.48, .44], [.56, .22], [.55, 0], [.48, -.22], [.40, -.38]]
+            .forEach(function (p) { hoodPts.push(new THREE.Vector2(p[0], p[1])); });
+        var hood = new THREE.Mesh(new THREE.LatheGeometry(hoodPts, 36), cloakMat);
+        hood.scale.set(1, 1.12, 1);
+        hood.rotation.x = .22;
+        headGroup.add(hood);
+        // hood rim (front opening)
+        var rim = new THREE.Mesh(new THREE.TorusGeometry(.47, .055, 14, 40), cloakMat);
+        rim.position.set(0, .02, .28);
+        rim.rotation.x = -.32;
+        headGroup.add(rim);
+        // face void — pure black inside the hood
+        var face = new THREE.Mesh(new THREE.SphereGeometry(.40, 28, 28), voidMat);
+        face.position.set(0, .02, .16);
+        face.scale.set(1, 1.15, .8);
+        headGroup.add(face);
+        // glowing eyes
         var eyes = [];
         [-1, 1].forEach(function (s) {
-            var eg = new THREE.Group();
-            var ball = new THREE.Mesh(new THREE.SphereGeometry(.155, 24, 24), white);
-            var iris = new THREE.Mesh(new THREE.SphereGeometry(.075, 20, 20), irisMat);
-            iris.position.z = .11;
-            var pupil = new THREE.Mesh(new THREE.SphereGeometry(.035, 12, 12), darkMat);
-            pupil.position.z = .15;
-            eg.add(ball); eg.add(iris); eg.add(pupil);
-            eg.position.set(s * .26, .08, .60);
-            headGroup.add(eg);
-            eyes.push(eg);
+            var eye = new THREE.Mesh(new THREE.BoxGeometry(.12, .028, .02), eyeMat);
+            eye.position.set(s * .15, .08, .50);
+            eye.rotation.z = s * -.10;
+            headGroup.add(eye);
+            eyes.push(eye);
         });
-        // brows
-        [-1, 1].forEach(function (s) {
-            var brow = new THREE.Mesh(new THREE.BoxGeometry(.30, .07, .08), darkMat);
-            brow.position.set(s * .27, .30, .62);
-            brow.rotation.z = s * -0.18;
-            headGroup.add(brow);
-        });
-        // mouth (grin)
-        var mouth = new THREE.Mesh(new THREE.BoxGeometry(.34, .1, .06), white);
-        mouth.position.set(0, -.30, .62);
-        headGroup.add(mouth);
-        // cap: dome + brim
-        var dome = new THREE.Mesh(
-            new THREE.SphereGeometry(.74, 40, 24, 0, Math.PI * 2, 0, Math.PI * .52), capMat);
-        dome.position.y = .18;
-        dome.scale.set(1, .9, .97);
-        headGroup.add(dome);
-        var band = new THREE.Mesh(new THREE.TorusGeometry(.72, .05, 12, 40), darkMat);
-        band.rotation.x = Math.PI / 2;
-        band.position.y = .22;
-        band.scale.set(1, 1, .6);
-        headGroup.add(band);
-        var brim = new THREE.Mesh(new THREE.CylinderGeometry(.34, .38, .06, 24, 1, false, 0, Math.PI), capMat);
-        brim.rotation.y = -Math.PI / 2;
-        brim.position.set(0, .24, .72);
-        headGroup.add(brim);
 
-        headGroup.position.y = 1.55;
+        headGroup.position.y = 1.28;
         char.add(headGroup);
 
-        // body — hoodie
-        var body = new THREE.Mesh(new THREE.CylinderGeometry(.55, .85, 1.5, 32), darkMat);
-        body.position.y = .1;
-        char.add(body);
-        var shoulders = new THREE.Mesh(new THREE.SphereGeometry(.56, 28, 20), darkMat);
-        shoulders.position.y = .82;
-        shoulders.scale.set(1.15, .55, .9);
-        char.add(shoulders);
-        // arms
-        [-1, 1].forEach(function (s) {
-            var arm = new THREE.Mesh(new THREE.CylinderGeometry(.16, .19, 1.15, 20), darkMat);
-            arm.position.set(s * .78, .25, 0);
-            arm.rotation.z = s * .22;
-            char.add(arm);
-            var hand = new THREE.Mesh(new THREE.SphereGeometry(.15, 16, 16), skinMat);
-            hand.position.set(s * .92, -.36, 0);
-            char.add(hand);
-        });
-        // glowing collar accent
-        var collar = new THREE.Mesh(new THREE.TorusGeometry(.42, .035, 10, 40),
-            new THREE.MeshBasicMaterial({ color: 0x5eead4 }));
-        collar.rotation.x = Math.PI / 2;
-        collar.position.y = .9;
-        char.add(collar);
+        // ---- cloaked body (widening robe) ----
+        var robe = new THREE.Mesh(new THREE.CylinderGeometry(.42, 1.05, 2.0, 36, 1, true), cloakMat);
+        robe.position.y = .1;
+        char.add(robe);
+        var robeCap = new THREE.Mesh(new THREE.CircleGeometry(1.05, 36), cloakInner);
+        robeCap.rotation.x = Math.PI / 2;
+        robeCap.position.y = -.9;
+        char.add(robeCap);
+        var chest = new THREE.Mesh(new THREE.SphereGeometry(.46, 28, 20), cloakMat);
+        chest.position.y = .95;
+        chest.scale.set(1.2, .7, .9);
+        char.add(chest);
 
-        char.position.y = -1.15;
+        // ---- arms reaching to laptop ----
+        [-1, 1].forEach(function (s) {
+            var arm = new THREE.Mesh(new THREE.CylinderGeometry(.11, .14, .95, 16), cloakMat);
+            arm.position.set(s * .52, .55, .38);
+            arm.rotation.set(.9, 0, s * .55);
+            char.add(arm);
+            var sleeve = new THREE.Mesh(new THREE.CylinderGeometry(.15, .19, .30, 16), cloakMat);
+            sleeve.position.set(s * .70, .28, .62);
+            sleeve.rotation.set(.9, 0, s * .55);
+            char.add(sleeve);
+        });
+
+        // ---- floating laptop with emissive screen ----
+        var laptop = new THREE.Group();
+        var lapBase = new THREE.Mesh(new THREE.BoxGeometry(1.05, .05, .68),
+            new THREE.MeshStandardMaterial({ color: 0x11151f, roughness: .4, metalness: .5 }));
+        laptop.add(lapBase);
+        var keys = new THREE.Mesh(new THREE.PlaneGeometry(.92, .5),
+            new THREE.MeshStandardMaterial({ color: 0x1a2130, roughness: .6, emissive: 0x14b8a6, emissiveIntensity: .12 }));
+        keys.rotation.x = -Math.PI / 2;
+        keys.position.y = .028;
+        laptop.add(keys);
+        var lidGroup = new THREE.Group();
+        var lid = new THREE.Mesh(new THREE.BoxGeometry(1.05, .62, .035),
+            new THREE.MeshStandardMaterial({ color: 0x11151f, roughness: .4, metalness: .5 }));
+        lid.position.y = .31;
+        lidGroup.add(lid);
+        var screenMat = new THREE.MeshBasicMaterial({ color: 0x36e6c4 });
+        var screen = new THREE.Mesh(new THREE.PlaneGeometry(.94, .52), screenMat);
+        screen.position.set(0, .31, .022);
+        lidGroup.add(screen);
+        lidGroup.position.z = -.33;
+        lidGroup.rotation.x = -.35;
+        laptop.add(lidGroup);
+        laptop.position.set(0, .18, .85);
+        char.add(laptop);
+        // screen glow lighting the hood
+        var screenLight = new THREE.PointLight(0x36e6c4, 1.6, 4.5);
+        screenLight.position.set(0, .6, .95);
+        char.add(screenLight);
+
+        char.position.y = -.85;
         scene.add(char);
 
+        // ---- holographic rings ----
+        var ringMat = new THREE.MeshBasicMaterial({
+            color: 0x5eead4, transparent: true, opacity: .28,
+            blending: THREE.AdditiveBlending, side: THREE.DoubleSide
+        });
+        var ring1 = new THREE.Mesh(new THREE.TorusGeometry(1.55, .012, 8, 80), ringMat);
+        ring1.rotation.x = Math.PI / 2.15;
+        ring1.position.y = -.35;
+        scene.add(ring1);
+        var ring2 = new THREE.Mesh(new THREE.TorusGeometry(1.85, .008, 8, 80), ringMat.clone());
+        ring2.material.opacity = .16;
+        ring2.rotation.x = Math.PI / 1.95;
+        ring2.position.y = -.15;
+        scene.add(ring2);
+
+        // ---- drifting code particles ----
+        var P = 90, pos = new Float32Array(P * 3), speed = [];
+        for (var i = 0; i < P; i++) {
+            pos[i * 3] = (Math.random() - .5) * 5;
+            pos[i * 3 + 1] = -1.6 + Math.random() * 4;
+            pos[i * 3 + 2] = (Math.random() - .5) * 3 - .5;
+            speed.push(.15 + Math.random() * .5);
+        }
+        var pGeo = new THREE.BufferGeometry();
+        pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+        var particles = new THREE.Points(pGeo, new THREE.PointsMaterial({
+            color: 0x5eead4, size: .035, transparent: true, opacity: .55,
+            blending: THREE.AdditiveBlending
+        }));
+        scene.add(particles);
+
         // ground glow disc
-        var glow = new THREE.Mesh(new THREE.CircleGeometry(1.6, 40),
-            new THREE.MeshBasicMaterial({ color: 0x14b8a6, transparent: true, opacity: .12 }));
+        var glow = new THREE.Mesh(new THREE.CircleGeometry(1.7, 40),
+            new THREE.MeshBasicMaterial({ color: 0x14b8a6, transparent: true, opacity: .10 }));
         glow.rotation.x = -Math.PI / 2;
-        glow.position.y = -1.55;
+        glow.position.y = -1.7;
         scene.add(glow);
 
         var mx = 0, my = 0;
@@ -363,16 +402,28 @@
             requestAnimationFrame(animate);
             if (!visible) return;
             t += .016;
-            // head tracks mouse
-            headGroup.rotation.y += ((mx * .55) - headGroup.rotation.y) * .08;
-            headGroup.rotation.x += ((my * .28) - headGroup.rotation.x) * .08;
-            eyes.forEach(function (e) {
-                e.position.z = .60 + Math.abs(mx) * .01;
-            });
-            // idle bob + sway
-            char.position.y = -1.15 + Math.sin(t * 1.6) * .045;
-            char.rotation.y = Math.sin(t * .4) * .06;
-            collar.material.color.setHSL(.45 + Math.sin(t) * .04, .75, .6);
+            // hood subtly tracks the cursor
+            headGroup.rotation.y += ((mx * .38) - headGroup.rotation.y) * .06;
+            headGroup.rotation.x += ((my * .18) - headGroup.rotation.x) * .06;
+            // levitation
+            char.position.y = -.85 + Math.sin(t * 1.1) * .06;
+            char.rotation.y = Math.sin(t * .3) * .05;
+            // screen flicker (hacking...)
+            var flick = .85 + Math.sin(t * 17) * .08 + Math.sin(t * 53) * .07;
+            screenLight.intensity = 1.4 * flick;
+            screenMat.color.setHSL(.46, .78, .38 + flick * .18);
+            // eye pulse
+            var ep = .75 + Math.sin(t * 2.2) * .25;
+            eyes.forEach(function (e) { e.material.color.setHSL(.46, .85, .45 + ep * .2); });
+            // rings + particles
+            ring1.rotation.z += .0022;
+            ring2.rotation.z -= .0015;
+            var arr = particles.geometry.attributes.position.array;
+            for (var i = 0; i < P; i++) {
+                arr[i * 3 + 1] += speed[i] * .016;
+                if (arr[i * 3 + 1] > 2.6) arr[i * 3 + 1] = -1.7;
+            }
+            particles.geometry.attributes.position.needsUpdate = true;
             renderer.render(scene, camera);
         })();
 

@@ -687,6 +687,90 @@ body.no-motion .gs-reveal-right, body.no-motion .gs-scale { opacity: 1; transfor
 /* --- Nav active state --- */
 .nav-link.active { color: var(--accent) !important; background: rgba(94, 234, 212, .08); }
 
+/* ============================================================
+   CARD NEATNESS PASS — uniform spacing, tidy icon tiles
+   ============================================================ */
+
+.highlights-grid, .certificates-grid, .projects-grid, .research-grid {
+    gap: 24px !important; align-items: stretch;
+}
+.about-stats { gap: 18px; }
+
+/* uniform card internals */
+.highlight-card, .research-card, .certificate-card {
+    padding: 30px 26px !important;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center; height: 100%;
+}
+.highlight-content, .research-content, .certificate-content {
+    display: flex; flex-direction: column; align-items: center;
+    flex: 1; width: 100%;
+}
+
+/* icon tiles: fixed size, centered — not full-width bars */
+.highlight-icon, .research-icon {
+    width: 62px; height: 62px; flex: none;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px !important;
+    border-radius: 16px !important;
+}
+.highlight-icon i, .research-icon i {
+    font-size: 1.5rem !important; margin: 0 !important; line-height: 1;
+}
+.highlight-content h3, .research-content h3 {
+    font-size: 1.12rem !important; line-height: 1.45; margin: 0 0 12px !important;
+}
+.highlight-content p, .research-content p {
+    color: var(--text-secondary); font-size: .95rem;
+    line-height: 1.65; margin: 0 0 20px !important;
+}
+.highlight-badge { margin-top: auto; align-self: center; }
+.research-links { margin-top: auto; }
+
+/* certificates: contained badge art, consistent proportions */
+.certificate-icon {
+    width: 128px; height: 128px; flex: none;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px !important;
+    background: transparent; border: none;
+}
+.certificate-logo { width: 100%; height: 100%; object-fit: contain; }
+.certificate-content h3 { font-size: 1.08rem !important; line-height: 1.4; margin-bottom: 10px !important; }
+.certificate-status { margin-bottom: 10px !important; }
+.certificate-description { font-size: .92rem; line-height: 1.6; color: var(--text-secondary); }
+.certificate-badge { margin-top: auto; }
+
+/* projects: tidy content padding, links pinned to bottom */
+.project-card { display: flex; flex-direction: column; }
+.project-content {
+    padding: 26px !important; display: flex; flex-direction: column; flex: 1;
+}
+.project-content h3 { margin-bottom: 12px !important; line-height: 1.4; }
+.project-content p { margin-bottom: 16px !important; line-height: 1.65; color: var(--text-secondary); }
+.project-tech { margin-bottom: 20px !important; }
+.project-links { margin-top: auto; }
+
+/* about stats + image card: proper hover states */
+.stat { cursor: default; }
+.stat:hover {
+    transform: translateY(-6px);
+    border-color: var(--hairline-accent) !important;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, .3), 0 0 24px rgba(94, 234, 212, .08);
+    background: linear-gradient(180deg, rgba(94, 234, 212, .06), rgba(255, 255, 255, .015)) !important;
+}
+.about-card { transition: transform .35s var(--ease-out), border-color .35s var(--ease-out), box-shadow .35s var(--ease-out); }
+.about-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--hairline-accent);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .4), 0 0 30px rgba(94, 234, 212, .08);
+}
+
+/* contact rows aligned */
+.contact-item { display: flex; align-items: center; gap: 14px; }
+
+/* skill items: keep icon centered above label */
+.skill-item { justify-content: center; text-align: center; }
+
 /* ============ REDUCED MOTION ============ */
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
