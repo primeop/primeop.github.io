@@ -870,6 +870,131 @@ section {
     border-color: #00d4aa;
 }
 
+/* Accordion Styles */
+.accordion-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.accordion-item {
+    border: 1px solid rgba(0, 212, 170, 0.2);
+    border-radius: 8px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    background: rgba(0, 212, 170, 0.03);
+    transition: all 0.3s ease;
+}
+
+.accordion-item:hover {
+    border-color: rgba(0, 212, 170, 0.4);
+    background: rgba(0, 212, 170, 0.05);
+}
+
+.accordion-header {
+    width: 100%;
+    padding: 24px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.3s ease;
+}
+
+.accordion-header:hover {
+    background: rgba(0, 212, 170, 0.08);
+}
+
+.accordion-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.accordion-title-text h3 {
+    color: #00d4aa;
+    font-size: 1.2rem;
+    margin: 0 0 4px 0;
+    font-weight: 600;
+}
+
+.accordion-title-text h4 {
+    color: #b0b0b0;
+    font-size: 1rem;
+    margin: 0 0 8px 0;
+    font-weight: 500;
+}
+
+.accordion-date {
+    color: #888;
+    font-size: 0.85rem;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.accordion-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: rgba(0, 212, 170, 0.15);
+    border-radius: 50%;
+    color: #00d4aa;
+    font-size: 1.4rem;
+    font-weight: bold;
+    flex-shrink: 0;
+    transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.accordion-header:hover .accordion-icon {
+    background: rgba(0, 212, 170, 0.3);
+}
+
+.accordion-header.active .accordion-icon {
+    transform: rotate(45deg);
+}
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+    padding: 0 24px;
+}
+
+.accordion-content.active {
+    max-height: 2000px;
+    padding: 0 24px 24px 24px;
+}
+
+.accordion-details ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.accordion-details ul li {
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 16px;
+    line-height: 1.7;
+    color: #d0d0d0;
+    font-size: 0.95rem;
+}
+
+.accordion-details ul li::before {
+    content: '▶';
+    position: absolute;
+    left: 0;
+    top: 2px;
+    color: #00d4aa;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(0, 212, 170, 0.5);
+    animation: pulse-bullet 2s infinite;
+}
+
 .job-description ul {
     list-style: none;
     padding: 0;
@@ -1653,12 +1778,31 @@ section {
         gap: 8px;
     }
 
-    .timeline-content {
-        padding: 16px;
+    .accordion-header {
+        padding: 18px;
     }
 
-    .job-description ul li {
+    .accordion-title-text h3 {
+        font-size: 1rem;
+    }
+
+    .accordion-title-text h4 {
+        font-size: 0.9rem;
+    }
+
+    .accordion-date {
+        font-size: 0.75rem;
+    }
+
+    .accordion-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 1.2rem;
+    }
+
+    .accordion-details ul li {
         font-size: 0.88rem;
+        margin-bottom: 12px;
     }
 
     .highlight-card {

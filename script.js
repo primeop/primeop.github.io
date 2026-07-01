@@ -1,3 +1,27 @@
+// Accordion Toggle
+function toggleAccordion(button) {
+    const header = button;
+    const content = button.nextElementSibling;
+    const isActive = header.classList.contains('active');
+
+    // Close all other accordions
+    document.querySelectorAll('.accordion-header.active').forEach(activeHeader => {
+        if (activeHeader !== header) {
+            activeHeader.classList.remove('active');
+            activeHeader.nextElementSibling.classList.remove('active');
+        }
+    });
+
+    // Toggle current accordion
+    if (!isActive) {
+        header.classList.add('active');
+        content.classList.add('active');
+    } else {
+        header.classList.remove('active');
+        content.classList.remove('active');
+    }
+}
+
 // Mobile Navigation Toggle
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');

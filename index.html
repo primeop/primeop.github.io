@@ -235,75 +235,90 @@
     <section id="experience" class="experience">
         <div class="container">
             <h2 class="section-title">Experience</h2>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                        <div class="company-icon">
-                            <img src="keck job.jpg" alt="Keck Medicine of USC" class="company-logo">
+            <div class="accordion-container">
+                <!-- Keck Medicine -->
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title-row">
+                            <div class="accordion-title-text">
+                                <h3>Cloud Security Engineer Intern</h3>
+                                <h4>Keck Medicine of USC</h4>
+                                <p class="accordion-date">October 2024 – May 2026 | Los Angeles, CA</p>
+                            </div>
+                            <span class="accordion-icon">+</span>
                         </div>
-                        <h3>Security Engineer Intern</h3>
-                        <h4>Keck Medicine of USC</h4>
-                        <p class="timeline-date">October 2024 – May 2026</p>
+                    </button>
+                    <div class="accordion-content">
                         <div class="tech-tags">
                             <span class="tech-tag">Go</span>
                             <span class="tech-tag">Python</span>
                             <span class="tech-tag">AWS</span>
                             <span class="tech-tag">Azure AD</span>
-                            <span class="tech-tag">JWT / OAuth2</span>
+                            <span class="tech-tag">OAuth2</span>
                             <span class="tech-tag">Terraform</span>
-                            <span class="tech-tag">RBAC</span>
+                            <span class="tech-tag">Lambda</span>
                             <span class="tech-tag">AppSec</span>
-                            <span class="tech-tag">HIPAA / NIST</span>
                         </div>
-                        <div class="job-description">
+                        <div class="accordion-details">
                             <ul>
-                                <li>Built and secured a <strong>Go REST API</strong> (OAuth2, JWT, RBAC) powering the Keck Cloud Portal for 40 engineers with object-level least-privilege over 1,000+ records.</li>
-                                <li>Found and fixed an <strong>IDOR flaw</strong> pre-production; added server-side ownership checks and RBAC validation on every object-access endpoint.</li>
-                                <li>Co-built the <strong>Keck Cloud Portal</strong> (Terraform, Lambda, policy-as-code); cut secure onboarding from 2-3 days to under 1 day.</li>
-                                <li>Automated <strong>HIPAA / NIST / CIS compliance</strong> for 100+ AWS resources via IaC and Config Rules, reducing manual effort by 25%.</li>
-                                <li>Built a <strong>GPT triage assistant</strong> on AWS that reduced analyst triage time by 67% per finding.</li>
+                                <li>Built and secured a <strong>Go REST API</strong> (20 endpoints; Azure AD OAuth2, JWT, RBAC) powering the Keck Cloud Portal for 40+ cloud, infrastructure, and security engineers, enforcing object-level least-privilege access over 1,000+ S3-hosted documents.</li>
+                                <li>Discovered and remediated an <strong>IDOR / broken object-level authorization flaw</strong> during internal AppSec testing that could have exposed 1,000+ cross-user onboarding requests, approvals, and documents; added server-side ownership checks and RBAC validation on every object-access endpoint, closing the gap pre-production with no known exploitation.</li>
+                                <li>Co-developed the <strong>Keck Cloud Portal</strong>, a security-by-default provisioning platform (Terraform, AWS Lambda, policy-as-code) adopted by 3-5 teams to onboard 40+ cloud workloads, cutting secure onboarding time from 2-3 days to under 1 day.</li>
+                                <li>Automated continuous compliance evaluation of 100+ AWS resources against <strong>HIPAA, HITRUST, CIS, NIST, and CMMC</strong> baselines using Terraform IaC and AWS Config Rules, reducing manual compliance effort by 25%.</li>
+                                <li>Built <strong>Python Lambda automation</strong> for Security Hub finding enrichment, alert routing, and remediation playbooks, handling 65% of routine cloud security findings and removing 10 hours/week of manual triage.</li>
+                                <li>Built a <strong>GPT-powered AI triage assistant</strong> (OpenAI API on AWS) that summarized and prioritized 75 Security Hub, GuardDuty, and Config findings/day into natural-language remediation guidance, reducing analyst triage time by 67% per finding.</li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                        <div class="company-icon">
-                            <img src="oracle job1.jpg" alt="Oracle Corporation" class="company-logo">
+
+                <!-- Oracle -->
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title-row">
+                            <div class="accordion-title-text">
+                                <h3>Cloud Solution Engineer</h3>
+                                <h4>Oracle Corporation – JAPAC</h4>
+                                <p class="accordion-date">September 2022 – July 2024 | Bangalore, India</p>
+                            </div>
+                            <span class="accordion-icon">+</span>
                         </div>
-                        <h3>Cloud Solution Engineer</h3>
-                        <h4>Oracle Corporation – JAPAC</h4>
-                        <p class="timeline-date">September 2022 – July 2024</p>
+                    </button>
+                    <div class="accordion-content">
                         <div class="tech-tags">
                             <span class="tech-tag">OCI</span>
+                            <span class="tech-tag">Cloud Guard</span>
+                            <span class="tech-tag">IAM</span>
                             <span class="tech-tag">Kubernetes</span>
                             <span class="tech-tag">Docker</span>
+                            <span class="tech-tag">Terraform</span>
                             <span class="tech-tag">CI/CD</span>
-                            <span class="tech-tag">SAST</span>
-                            <span class="tech-tag">IAM</span>
-                            <span class="tech-tag">Cloud Guard</span>
                             <span class="tech-tag">DevSecOps</span>
                         </div>
-                        <div class="job-description">
+                        <div class="accordion-details">
                             <ul>
-                                <li>Embedded <strong>SAST, IaC validation, and policy gates</strong> across 12 CI/CD pipelines for 4 teams; cut pre-production security issues by 25%.</li>
-                                <li>Migrated 20+ workloads to <strong>OCI</strong> (Kubernetes, Docker) with network segmentation and DLP, cutting provisioning effort by 30%.</li>
-                                <li>Configured <strong>IAM, Cloud Guard, and identity federation</strong> to enforce least privilege across multi-tenant OCI environments.</li>
+                                <li>Audited <strong>IAM across 10+ OCI tenancies</strong> via Cloud Guard, replacing standing admin with just-in-time privileged access and remediating over-privileged roles, wildcard policy statements, and weak federation trust configs, cutting standing privileged access by 90%.</li>
+                                <li>Embedded <strong>SAST, IaC validation, and policy-as-code gates</strong> into 12 CI/CD pipelines across 4 engineering teams, blocking misconfigurations and policy violations pre-merge and reducing security issues reaching pre-production by 25%.</li>
+                                <li>Stood up <strong>Cloud Guard detector and responder recipes</strong> mapped to the CIS OCI Benchmark, driving misconfiguration remediation across 15 compartments and raising conformance from 58% to 96%.</li>
+                                <li>Hardened 20+ migrated OCI workloads (Kubernetes, Docker) with NSG least-privilege rules, network segmentation, and centralized secrets/key management via OCI Vault and KMS, eliminating hardcoded credentials and enforcing encryption-at-rest across multi-tenant environments.</li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                        <div class="company-icon">
-                            <img src="stqc job.png" alt="STQC Directorate" class="company-logo">
+
+                <!-- STQC -->
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title-row">
+                            <div class="accordion-title-text">
+                                <h3>Cybersecurity Intern – VAPT</h3>
+                                <h4>STQC Directorate w/ IISc Bangalore</h4>
+                                <p class="accordion-date">May 2021 – August 2021 | Bangalore, India</p>
+                            </div>
+                            <span class="accordion-icon">+</span>
                         </div>
-                        <h3>Cybersecurity Intern – VAPT</h3>
-                        <h4>STQC Directorate w/ IISc Bangalore</h4>
-                        <p class="timeline-date">May 2021 – August 2021</p>
+                    </button>
+                    <div class="accordion-content">
                         <div class="tech-tags">
                             <span class="tech-tag">Burp Suite</span>
                             <span class="tech-tag">OWASP ZAP</span>
@@ -312,10 +327,10 @@
                             <span class="tech-tag">OWASP Top 10</span>
                             <span class="tech-tag">ASVS</span>
                         </div>
-                        <div class="job-description">
+                        <div class="accordion-details">
                             <ul>
-                                <li><strong>API security testing</strong> on India's IUDX govt. platform; fuzz-tested endpoints, surfaced auth and access-boundary flaws.</li>
-                                <li>Identified and mitigated <strong>OWASP Top 10</strong> risks (SQLi, XSS, IDOR, broken auth) with ASVS-aligned recommendations.</li>
+                                <li>Performed <strong>API security testing</strong> on the Govt. of India's Indian Urban Data Exchange (IUDX) platform using Burp Suite, OWASP ZAP, Postman, and Nmap; fuzzing endpoints and manipulating requests to surface flaws across APIs, auth flows, and access boundaries.</li>
+                                <li>Analyzed and mitigated <strong>OWASP Top 10 risks</strong> (SQLi, XSS, IDOR, broken authentication, session flaws) with root-cause analysis and secure-coding recommendations aligned to OWASP ASVS and NIST.</li>
                             </ul>
                         </div>
                     </div>
