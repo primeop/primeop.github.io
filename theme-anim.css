@@ -325,6 +325,7 @@ body.no-motion .gs-reveal-right, body.no-motion .gs-scale { opacity: 1; transfor
     position: absolute; left: 9px; top: 0; width: 10px; height: 10px;
     border-radius: 50%; background: var(--accent-strong);
     transform: translate(-50%, -50%);
+    transition: opacity .4s ease;
     box-shadow: 0 0 5px 2px #67e8f9, 0 0 15px 8px rgba(94, 234, 212, .8), 0 0 60px 16px rgba(165, 243, 252, .5);
     animation: tlPulse .8s linear infinite;
 }

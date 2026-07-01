@@ -66,6 +66,7 @@
     /* ================= HERO INTRO ================= */
     function startIntro() {
         if (!hasGSAP || reducedMotion) return;
+        if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
         var tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
         tl.fromTo('.hero-status', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: .6 })
           .fromTo('.hero-keywords span', { y: 60, opacity: 0 },
@@ -210,11 +211,19 @@
             container.appendChild(line);
             container.appendChild(dot);
             ScrollTrigger.create({
-                trigger: container, start: 'top 75%', end: 'bottom 55%', scrub: .5,
+                trigger: container, start: 'top 78%', end: 'bottom 60%', scrub: .5,
                 onUpdate: function (self) {
-                    line.style.setProperty('--tl', self.progress);
-                    dot.style.top = (self.progress * 100) + '%';
+                    var p = self.progress;
+                    line.style.setProperty('--tl', p);
+                    dot.style.top = Math.min(p * 100, 97) + '%';
+                    dot.style.opacity = p >= .999 ? '0' : '1';
                 }
+            });
+            // accordion toggles change layout — remeasure triggers
+            document.querySelectorAll('.accordion-header').forEach(function (h) {
+                h.addEventListener('click', function () {
+                    setTimeout(function () { ScrollTrigger.refresh(); }, 550);
+                });
             });
         }
 
@@ -272,20 +281,82 @@
         rim.position.set(0, .02, .28);
         rim.rotation.x = -.32;
         headGroup.add(rim);
-        // face void — pure black inside the hood
-        var face = new THREE.Mesh(new THREE.SphereGeometry(.40, 28, 28), voidMat);
-        face.position.set(0, .02, .16);
-        face.scale.set(1, 1.15, .8);
-        headGroup.add(face);
-        // glowing eyes
+        // shadow behind the mask
+        var faceShadow = new THREE.Mesh(new THREE.SphereGeometry(.40, 28, 28), voidMat);
+        faceShadow.position.set(0, .02, .12);
+        faceShadow.scale.set(1, 1.15, .7);
+        headGroup.add(faceShadow);
+
+        // ---- Guy Fawkes style mask ----
+        var mask = new THREE.Group();
+        var maskMat = new THREE.MeshStandardMaterial({ color: 0xf2efe6, roughness: .35, metalness: .02 });
+        var featMat = new THREE.MeshStandardMaterial({ color: 0x0a0c12, roughness: .5 });
+        var blushMat = new THREE.MeshStandardMaterial({ color: 0xd98f8f, roughness: .6 });
+        // face shell — tapers to a pointed chin
+        var shell = new THREE.Mesh(new THREE.SphereGeometry(.40, 36, 36), maskMat);
+        shell.scale.set(.92, 1.22, .5);
+        mask.add(shell);
+        var chin = new THREE.Mesh(new THREE.ConeGeometry(.20, .34, 24), maskMat);
+        chin.position.set(0, -.44, .05);
+        chin.rotation.x = .28;
+        chin.scale.set(1, 1, .55);
+        mask.add(chin);
+        // eye holes — dark almonds with a faint teal glint
         var eyes = [];
         [-1, 1].forEach(function (s) {
-            var eye = new THREE.Mesh(new THREE.BoxGeometry(.12, .028, .02), eyeMat);
-            eye.position.set(s * .15, .08, .50);
-            eye.rotation.z = s * -.10;
-            headGroup.add(eye);
-            eyes.push(eye);
+            var hole = new THREE.Mesh(new THREE.SphereGeometry(.085, 20, 20), featMat);
+            hole.position.set(s * .155, .10, .175);
+            hole.scale.set(1.25, .72, .35);
+            hole.rotation.z = s * .18;
+            mask.add(hole);
+            var glint = new THREE.Mesh(new THREE.SphereGeometry(.028, 12, 12), eyeMat);
+            glint.position.set(s * .15, .10, .20);
+            mask.add(glint);
+            eyes.push(glint);
         });
+        // raised eyebrows
+        [-1, 1].forEach(function (s) {
+            var brow = new THREE.Mesh(new THREE.TorusGeometry(.10, .016, 10, 24, 1.5), featMat);
+            brow.position.set(s * .16, .175, .185);
+            brow.rotation.set(.15, 0, s * -0.5 + Math.PI / 2 + (s === 1 ? Math.PI : 0));
+            mask.add(brow);
+        });
+        // rosy cheeks
+        [-1, 1].forEach(function (s) {
+            var cheek = new THREE.Mesh(new THREE.SphereGeometry(.055, 16, 16), blushMat);
+            cheek.position.set(s * .21, -.045, .16);
+            cheek.scale.set(1.15, .8, .3);
+            mask.add(cheek);
+        });
+        // nose ridge
+        var nose = new THREE.Mesh(new THREE.ConeGeometry(.05, .16, 16), maskMat);
+        nose.position.set(0, -.03, .215);
+        nose.rotation.x = 1.35;
+        nose.scale.set(1, 1, .7);
+        mask.add(nose);
+        // upturned mustache — two arcs
+        [-1, 1].forEach(function (s) {
+            var stache = new THREE.Mesh(new THREE.TorusGeometry(.085, .020, 10, 24, 1.7), featMat);
+            stache.position.set(s * .095, -.155, .195);
+            stache.rotation.set(.1, s * .35, s === 1 ? -.45 : Math.PI - 2.6);
+            stache.scale.set(1, 1, .5);
+            mask.add(stache);
+        });
+        // soul patch goatee
+        var goatee = new THREE.Mesh(new THREE.ConeGeometry(.035, .13, 12), featMat);
+        goatee.position.set(0, -.32, .16);
+        goatee.rotation.x = Math.PI + .25;
+        goatee.scale.set(1, 1, .5);
+        mask.add(goatee);
+        // subtle smile line
+        var smile = new THREE.Mesh(new THREE.TorusGeometry(.075, .011, 8, 24, 1.4), featMat);
+        smile.position.set(0, -.19, .185);
+        smile.rotation.set(.2, 0, Math.PI + (Math.PI - 1.4) / 2);
+        smile.scale.set(1, 1, .45);
+        mask.add(smile);
+
+        mask.position.set(0, .02, .30);
+        headGroup.add(mask);
 
         headGroup.position.y = 1.28;
         char.add(headGroup);
@@ -655,7 +726,6 @@
         initReveals();
         initSectionExtras();
         initCharacter();
-        initBallPit();
     }
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', boot);
