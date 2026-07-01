@@ -314,11 +314,11 @@
             mask.add(glint);
             eyes.push(glint);
         });
-        // raised eyebrows
+        // raised eyebrows — angled up toward the temples
         [-1, 1].forEach(function (s) {
-            var brow = new THREE.Mesh(new THREE.TorusGeometry(.10, .016, 10, 24, 1.5), featMat);
-            brow.position.set(s * .16, .175, .185);
-            brow.rotation.set(.15, 0, s * -0.5 + Math.PI / 2 + (s === 1 ? Math.PI : 0));
+            var brow = new THREE.Mesh(new THREE.BoxGeometry(.155, .024, .02), featMat);
+            brow.position.set(s * .155, .195, .19);
+            brow.rotation.z = -.42 * s;
             mask.add(brow);
         });
         // rosy cheeks
