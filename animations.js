@@ -528,12 +528,81 @@
         });
     }
 
+    /* ================= SECTION EXTRAS ================= */
+    function initSectionExtras() {
+        // mono overline labels above every section title
+        var labels = {
+            about: '01 / Who I am', highlights: '02 / Wins & honors',
+            experience: '03 / Where I’ve been', skills: '04 / My arsenal',
+            certificates: '05 / Proof of work', projects: '06 / Things I built',
+            research: '07 / Published work', contact: '08 / Say hello'
+        };
+        Object.keys(labels).forEach(function (id) {
+            var sec = document.getElementById(id);
+            var title = sec && sec.querySelector('.section-title');
+            if (!title) return;
+            var l = document.createElement('div');
+            l.className = 'section-label';
+            l.textContent = labels[id];
+            title.parentNode.insertBefore(l, title);
+        });
+
+        // count-up stats
+        var stats = document.querySelectorAll('.stat-number');
+        if (stats.length && 'IntersectionObserver' in window && !reducedMotion) {
+            var counted = false;
+            new IntersectionObserver(function (entries, obs) {
+                if (!entries[0].isIntersecting || counted) return;
+                counted = true;
+                obs.disconnect();
+                stats.forEach(function (el) {
+                    var raw = el.textContent.trim();
+                    var num = parseInt(raw, 10) || 0;
+                    var suffix = raw.replace(/[0-9]/g, '');
+                    var start = null;
+                    function tick(ts) {
+                        if (!start) start = ts;
+                        var p = Math.min((ts - start) / 1200, 1);
+                        p = 1 - Math.pow(1 - p, 3); // ease-out cubic
+                        el.textContent = Math.round(num * p) + suffix;
+                        if (p < 1) requestAnimationFrame(tick);
+                    }
+                    requestAnimationFrame(tick);
+                });
+            }, { threshold: .5 }).observe(stats[0]);
+        }
+
+        // subtle 3D tilt on cards (desktop, fine pointers only)
+        if (reducedMotion || window.matchMedia('(pointer: coarse)').matches) return;
+        document.querySelectorAll('.highlight-card, .project-card, .research-card, .certificate-card')
+            .forEach(function (card) {
+                card.classList.add('tilt-card');
+                var raf = null;
+                card.addEventListener('mousemove', function (e) {
+                    if (raf) return;
+                    raf = requestAnimationFrame(function () {
+                        raf = null;
+                        var r = card.getBoundingClientRect();
+                        var rx = ((e.clientY - r.top) / r.height - .5) * -6;
+                        var ry = ((e.clientX - r.left) / r.width - .5) * 6;
+                        card.style.transform =
+                            'perspective(900px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' +
+                            ry.toFixed(2) + 'deg) translateY(-6px)';
+                    });
+                });
+                card.addEventListener('mouseleave', function () {
+                    card.style.transform = '';
+                });
+            });
+    }
+
     /* ================= BOOT ================= */
     function boot() {
         initLoader();
         initCursor();
         initNav();
         initReveals();
+        initSectionExtras();
         initCharacter();
         initBallPit();
     }

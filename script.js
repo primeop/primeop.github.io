@@ -235,17 +235,7 @@ skillItems.forEach(item => {
     skillObserver.observe(item);
 });
 
-// Project cards hover effect
-const projectCards = document.querySelectorAll('.project-card');
-projectCards.forEach(card => {
-    card.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-15px) scale(1.02)';
-    });
-    
-    card.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0) scale(1)';
-    });
-});
+// Project card hover is handled by CSS + tilt effect in animations.js
 
 // Smooth reveal animation for timeline items
 const timelineItems = document.querySelectorAll('.timeline-item');
