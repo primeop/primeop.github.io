@@ -5,10 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kamalesh Jayapandiaraj Arumugam - Portfolio</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="theme-anim.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-header">
+            <span class="loader-title">KJA — SECURITY ENGINEER</span>
+        </div>
+        <div class="loading-marquee">
+            <div class="loading-marquee-track">
+                <span>AppSec</span><span>Cloud Security</span><span>API Security</span><span>DevSecOps</span><span>AppSec</span><span>Cloud Security</span><span>API Security</span><span>DevSecOps</span>
+            </div>
+        </div>
+        <div class="loading-wrap" id="loadingWrap">
+            <div class="loading-hover"></div>
+            <button class="loading-button" type="button">
+                <span id="loadingLabel">LOADING</span>
+                <span class="loading-pct" id="loadingPct">0%</span>
+                <span class="loading-box"></span>
+            </button>
+        </div>
+    </div>
+
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
@@ -54,10 +75,16 @@
 
     <!-- Hero Section -->
     <section id="home" class="hero">
+        <div class="hero-grid-bg"></div>
+        <div class="hero-circle"></div>
+        <div class="hero-circle2"></div>
 
-        
         <div class="hero-container">
             <div class="hero-content">
+                <div class="hero-status">
+                    <span class="hero-status-dot"></span>
+                    <span>Available for opportunities</span>
+                </div>
                 <h1 class="hero-keywords">
                     <span>AppSec</span>
                     <span class="dot">•</span>
@@ -81,14 +108,9 @@
                 </div>
             </div>
             <div class="hero-image">
-                <div class="profile-card">
-                    <div class="profile-avatar">
-                        <img src="dp.jpg" alt="Kamalesh Jayapandiaraj Arumugam" class="profile-image">
-                    </div>
-                    <div class="profile-info">
-                        <h3>Kamalesh Jayapandiaraj Arumugam</h3>
-                        <p>Application & Cloud Security Engineer</p>
-                    </div>
+                <div class="hero-character" id="character3d"></div>
+                <div class="character-plate">
+                    <strong>Kamalesh Jayapandiaraj Arumugam</strong> · Security Engineer
                 </div>
             </div>
         </div>
@@ -340,6 +362,10 @@
     <section id="skills" class="skills">
         <div class="container">
             <h2 class="section-title">🛠️ Tech Stack</h2>
+            <div class="ballpit-wrap">
+                <div id="ballpit3d" style="width:100%;height:100%;"></div>
+                <span class="ballpit-hint">Move your mouse — push the balls around</span>
+            </div>
             <div class="skills-grid">
                 <div class="skill-category">
                     <h3>Programming & Cloud</h3>
@@ -768,5 +794,9 @@
     </footer>
 
     <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="animations.js"></script>
 </body>
 </html>

@@ -51,17 +51,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Navbar background change on scroll
-window.addEventListener('scroll', () => {
-    const navbar = document.querySelector('.navbar');
-    if (window.scrollY > 100) {
-        navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-        navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.15)';
-    } else {
-        navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-        navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
-    }
-});
+// Navbar background is handled by theme-anim.css (glass pills)
 
 // Intersection Observer for animations
 const observerOptions = {
@@ -223,15 +213,7 @@ window.addEventListener('load', () => {
     }
 });
 
-// Parallax effect for hero section
-window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    const hero = document.querySelector('.hero');
-    if (hero) {
-        const rate = scrolled * -0.5;
-        hero.style.transform = `translateY(${rate}px)`;
-    }
-});
+// Hero parallax handled by GSAP in animations.js
 
 // Skills animation on scroll
 const skillItems = document.querySelectorAll('.skill-item');
@@ -290,50 +272,7 @@ window.addEventListener('load', () => {
     document.body.classList.add('loaded');
 });
 
-// Add CSS for loading state
-const loadingCSS = `
-    body:not(.loaded) {
-        overflow: hidden;
-    }
-    
-    body:not(.loaded)::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        z-index: 9999;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    body:not(.loaded)::after {
-        content: 'Loading...';
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: white;
-        font-size: 1.5rem;
-        font-weight: 600;
-        z-index: 10000;
-    }
-`;
-
-// Inject loading CSS
-const style = document.createElement('style');
-style.textContent = loadingCSS;
-document.head.appendChild(style);
-
-// Remove loading screen after content loads
-window.addEventListener('load', () => {
-    setTimeout(() => {
-        document.body.classList.add('loaded');
-    }, 500);
-});
+// Old loading overlay removed — new branded loader lives in animations.js
 
 // Add scroll progress indicator
 const progressBar = document.createElement('div');
@@ -343,7 +282,7 @@ progressBar.style.cssText = `
     left: 0;
     width: 0%;
     height: 3px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(90deg, #14b8a6, #5eead4, #67e8f9);
     z-index: 10001;
     transition: width 0.1s ease;
 `;
