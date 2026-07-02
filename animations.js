@@ -346,6 +346,7 @@
                 new THREE.MeshBasicMaterial({ color: 0x7df3e1 }));
             eye.position.set(s * .145, .075, .42);
             eye.rotation.z = s * .12;
+            eye.userData.bx = s * .145;
             headGroup.add(eye);
             eyes.push(eye);
             var gs = glowSprite(.30);
@@ -429,31 +430,122 @@
 
         // ground glow disc
         var glow = new THREE.Mesh(new THREE.CircleGeometry(1.35, 40),
-            new THREE.MeshBasicMaterial({ color: 0x14b8a6, transparent: true, opacity: .10 }));
+            new THREE.MeshBasicMaterial({ color: 0x14b8a6, transparent: true, opacity: .08 }));
         glow.rotation.x = -Math.PI / 2;
         glow.position.y = -1.05;
         scene.add(glow);
 
-        // faint floating code panels
+        // ---- radar floor: concentric rings + rotating sweep ----
+        var radar = new THREE.Group();
+        radar.position.y = -1.02;
+        [.45, .85, 1.25].forEach(function (rr, i) {
+            var ring = new THREE.Mesh(new THREE.TorusGeometry(rr, .004, 6, 64),
+                new THREE.MeshBasicMaterial({ color: 0x5eead4, transparent: true, opacity: .16 - i * .03 }));
+            ring.rotation.x = Math.PI / 2;
+            radar.add(ring);
+        });
+        var sweep = new THREE.Mesh(new THREE.CircleGeometry(1.25, 40, 0, .75),
+            new THREE.MeshBasicMaterial({
+                color: 0x5eead4, transparent: true, opacity: .10,
+                blending: THREE.AdditiveBlending, side: THREE.DoubleSide, depthWrite: false
+            }));
+        sweep.rotation.x = -Math.PI / 2;
+        radar.add(sweep);
+        scene.add(radar);
+
+        // ---- rising scan pulse ----
+        var scanRing = new THREE.Mesh(new THREE.TorusGeometry(1.0, .006, 8, 64),
+            new THREE.MeshBasicMaterial({
+                color: 0x67e8f9, transparent: true, opacity: 0,
+                blending: THREE.AdditiveBlending, depthWrite: false
+            }));
+        scanRing.rotation.x = Math.PI / 2;
+        scanRing.visible = false;
+        scene.add(scanRing);
+
+        // ---- digital rain planes behind the figure ----
+        var rainCanvas = document.createElement('canvas');
+        rainCanvas.width = 192; rainCanvas.height = 384;
+        var rctx = rainCanvas.getContext('2d');
+        var rainCols = 16, drops = [];
+        for (var rc = 0; rc < rainCols; rc++) drops.push(Math.random() * 24);
+        var glyphs = '01<>/{}[]$#@&*+=;:01アイウエオカキクケコ';
+        var rainTex = new THREE.CanvasTexture(rainCanvas);
+        function stepRain() {
+            rctx.globalCompositeOperation = 'destination-out';
+            rctx.fillStyle = 'rgba(0,0,0,.07)';
+            rctx.fillRect(0, 0, 192, 384);
+            rctx.globalCompositeOperation = 'source-over';
+            rctx.font = '13px monospace';
+            for (var i = 0; i < rainCols; i++) {
+                if (Math.random() < .5) continue;
+                rctx.fillStyle = Math.random() < .12 ? 'rgba(167,139,250,.9)' : 'rgba(94,234,212,.85)';
+                rctx.fillText(glyphs[Math.floor(Math.random() * glyphs.length)],
+                    i * 12 + 2, (drops[i] % 26) * 15);
+                drops[i] += .55 + Math.random() * .3;
+            }
+            rainTex.needsUpdate = true;
+        }
+        var rainMatBase = new THREE.MeshBasicMaterial({
+            map: rainTex, transparent: true, opacity: .16,
+            depthWrite: false, side: THREE.DoubleSide
+        });
+        var rain1 = new THREE.Mesh(new THREE.PlaneGeometry(2.0, 4.0), rainMatBase);
+        rain1.position.set(-.9, .5, -1.5);
+        rain1.rotation.y = .25;
+        scene.add(rain1);
+        var rain2 = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 3.2), rainMatBase.clone());
+        rain2.material.opacity = .10;
+        rain2.position.set(1.1, .3, -1.9);
+        rain2.rotation.y = -.3;
+        scene.add(rain2);
+
+        // floating terminal windows
         function codePanel() {
             var c = document.createElement('canvas');
-            c.width = 256; c.height = 160;
+            c.width = 256; c.height = 176;
             var ctx = c.getContext('2d');
-            for (var r = 0; r < 9; r++) {
-                var y = 12 + r * 16, x = 8;
+            // window body
+            ctx.beginPath();
+            var r = 14, w = 256, h = 176;
+            ctx.moveTo(r, 0); ctx.lineTo(w - r, 0); ctx.arcTo(w, 0, w, r, r);
+            ctx.lineTo(w, h - r); ctx.arcTo(w, h, w - r, h, r);
+            ctx.lineTo(r, h); ctx.arcTo(0, h, 0, h - r, r);
+            ctx.lineTo(0, r); ctx.arcTo(0, 0, r, 0, r);
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(8,13,22,.82)';
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(94,234,212,.35)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            // title bar dots
+            ['#5eead4', '#a78bfa', '#f472b6'].forEach(function (col, i) {
+                ctx.beginPath();
+                ctx.arc(20 + i * 18, 16, 4.5, 0, Math.PI * 2);
+                ctx.fillStyle = col; ctx.globalAlpha = .8; ctx.fill(); ctx.globalAlpha = 1;
+            });
+            ctx.strokeStyle = 'rgba(255,255,255,.08)';
+            ctx.beginPath(); ctx.moveTo(0, 30); ctx.lineTo(256, 30); ctx.stroke();
+            // prompt line
+            ctx.font = '600 13px monospace';
+            ctx.fillStyle = 'rgba(94,234,212,.95)';
+            ctx.fillText('$ ' + ['nmap -sV target', 'go run exploit.go', 'terraform plan', 'burp --scan api'][Math.floor(Math.random() * 4)], 14, 52);
+            // output bars
+            for (var row = 0; row < 6; row++) {
+                var y = 72 + row * 17, x = 14;
                 var segs = 2 + Math.floor(Math.random() * 3);
                 for (var k = 0; k < segs; k++) {
-                    ctx.fillStyle = 'rgba(94,234,212,' + (.25 + Math.random() * .45) + ')';
-                    var w = 18 + Math.random() * 55;
-                    ctx.fillRect(x, y, w, 5);
-                    x += w + 12;
+                    ctx.fillStyle = 'rgba(198,210,229,' + (.14 + Math.random() * .22) + ')';
+                    var bw = 20 + Math.random() * 52;
+                    ctx.fillRect(x, y, bw, 6);
+                    x += bw + 12;
                 }
             }
             var tex = new THREE.CanvasTexture(c);
-            return new THREE.Mesh(new THREE.PlaneGeometry(.68, .42),
+            return new THREE.Mesh(new THREE.PlaneGeometry(.78, .54),
                 new THREE.MeshBasicMaterial({
-                    map: tex, transparent: true, opacity: .38,
-                    blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide
+                    map: tex, transparent: true, opacity: .85,
+                    depthWrite: false, side: THREE.DoubleSide
                 }));
         }
         var panelL = codePanel();
@@ -491,21 +583,41 @@
             // uplight flicker (hacking...)
             var flick = .85 + Math.sin(t * 17) * .08 + Math.sin(t * 53) * .07;
             screenLight.intensity = 1.35 * flick;
-            // eye pulse + occasional blink
+            // eye pulse + occasional blink + rare glitch
             var ep = .75 + Math.sin(t * 2.2) * .25;
             var bp = t % 4.6;
             var blink = bp > 4.35 ? Math.max(.08, 1 - Math.sin((bp - 4.35) / .25 * Math.PI)) : 1;
+            var gp = t % 7.3;
+            var glitching = gp > 7.12;
             eyes.forEach(function (e) {
-                e.material.color.setHSL(.46, .85, .5 + ep * .18);
+                if (glitching) {
+                    e.position.x = e.userData.bx + (Math.random() - .5) * .04;
+                    e.material.color.setHex(Math.random() < .35 ? 0xf472b6 : 0x7df3e1);
+                } else {
+                    e.position.x = e.userData.bx;
+                    e.material.color.setHSL(.46, .85, .5 + ep * .18);
+                }
                 e.scale.y = blink;
             });
+            // digital rain + radar sweep
+            stepRain();
+            sweep.rotation.z -= .012;
+            // rising scan pulse every ~6s
+            var st = t % 6;
+            if (st < 1.5) {
+                scanRing.visible = true;
+                var sp2 = st / 1.5;
+                scanRing.position.y = -1.0 + sp2 * 2.5;
+                scanRing.material.opacity = .45 * Math.sin(sp2 * Math.PI);
+                scanRing.scale.setScalar(1 - sp2 * .38);
+            } else scanRing.visible = false;
             // subtle breathing
             shoulders.scale.y = 1.1 + Math.sin(t * 1.4) * .012;
             // floating code panels drift
             panelL.position.y = .55 + Math.sin(t * .8) * .05;
             panelR.position.y = .9 + Math.sin(t * .8 + 1.6) * .05;
-            panelL.material.opacity = .34 + Math.sin(t * 2.1) * .06;
-            panelR.material.opacity = .34 + Math.sin(t * 1.7 + .8) * .06;
+            panelL.material.opacity = .8 + Math.sin(t * 2.1) * .08;
+            panelR.material.opacity = .8 + Math.sin(t * 1.7 + .8) * .08;
             // rings + particles
             ring1.rotation.z += .0022;
             ring2.rotation.z -= .0015;
