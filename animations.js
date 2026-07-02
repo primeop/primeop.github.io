@@ -636,13 +636,14 @@
             t += .016;
             frame++;
 
-            // ---- boot sequence: 0 -> ~2.6s power-on ----
+            // ---- boot sequence: 0 -> ~2.6s ignition flourish (figure always visible) ----
             var bt = boot();
-            var booting = false, bootWake = 1;
-            if (bt > 0 && bt < 2.6) { booting = true; bootWake = Math.min(1, bt / 2.6); }
+            var booting = bt > 0 && bt < 2.6;
+            var bootWake = booting ? Math.min(1, bt / 2.6) : 1;   // ignition ramp for eyes/glow only
             // ease proximity toward target; scroll power fades everything
             proximity += (proxTarget - proximity) * .08;
-            var power = heroPower * bootWake; // overall aliveness 0..1
+            var power = heroPower;                 // body/rings/terminals — scroll only
+            var alive = heroPower * bootWake;      // eyes + screen light — includes boot ignition
 
             // hood tracks cursor (harder when staring)
             var trackK = staring ? .62 : .38;
@@ -654,7 +655,7 @@
             char.rotation.y = Math.sin(t * .3) * .07;
 
             var flick = .85 + Math.sin(t * 17) * .08 + Math.sin(t * 53) * .07;
-            screenLight.intensity = 1.35 * flick * power;
+            screenLight.intensity = 1.35 * flick * alive;
 
             // eye pulse, blink, proximity brighten
             var ep = .75 + Math.sin(t * 2.2) * .25;
@@ -689,13 +690,13 @@
                 rimM.intensity = 1.0;
             }
             eyes.forEach(function (e, i) {
-                var lit = (glitching ? 1 : (.5 + ep * .18)) * eyeOn[i] * (.6 + power * .4);
+                var on = eyeOn[i] * alive;
                 if (glitching) e.material.color.setHex(Math.random() < .35 ? 0xf472b6 : 0x7df3e1);
                 else e.material.color.setHSL(.46, .85, .35 + (.25 + proximity * .3) * (.6 + ep * .4));
-                e.material.opacity = eyeOn[i];
+                e.material.opacity = on;
                 e.scale.y = blink * eyeOn[i];
                 var g = eyeGlows[i];
-                g.material.opacity = eyeOn[i] * (glitching ? 1 : .8);
+                g.material.opacity = on * (glitching ? 1 : .8);
                 g.scale.setScalar(g.userData.base * (1 + proximity * .35 + (glitching ? .3 : 0)) * eyeOn[i]);
             });
 
