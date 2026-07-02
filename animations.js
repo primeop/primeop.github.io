@@ -622,11 +622,12 @@
             heroPower = Math.max(0, Math.min(1, 1 - window.scrollY / (vh * .8)));
         }, { passive: true });
 
-        // boot sequence timer (starts when the section is first entered)
-        var boot = 0; // 0 = not started, then counts up
-        window.__prim30pBoot = function () { boot = 0.0001; };
+        // boot sequence (wall-clock based so it completes even if frames throttle)
+        var bootStart = 0; // 0 = not started
+        function boot() { return bootStart ? (performance.now() - bootStart) / 1000 : 0; }
+        window.__prim30pBoot = function () { if (!bootStart) bootStart = performance.now(); };
         // if loader already gone (repeat visit / reduced motion), boot immediately
-        if (!document.getElementById('loadingScreen')) boot = 0.0001;
+        if (!document.getElementById('loadingScreen')) bootStart = performance.now();
 
         var netTick = 0, frame = 0;
         (function animate() {
@@ -636,11 +637,9 @@
             frame++;
 
             // ---- boot sequence: 0 -> ~2.6s power-on ----
+            var bt = boot();
             var booting = false, bootWake = 1;
-            if (boot > 0) {
-                boot += .016;
-                if (boot < 2.6) { booting = true; bootWake = Math.min(1, boot / 2.6); }
-            }
+            if (bt > 0 && bt < 2.6) { booting = true; bootWake = Math.min(1, bt / 2.6); }
             // ease proximity toward target; scroll power fades everything
             proximity += (proxTarget - proximity) * .08;
             var power = heroPower * bootWake; // overall aliveness 0..1
@@ -671,8 +670,8 @@
             // boot: eyes ignite one at a time
             var eyeOn = [1, 1];
             if (booting) {
-                eyeOn[0] = boot > 1.4 ? Math.min(1, (boot - 1.4) / .3) : 0;
-                eyeOn[1] = boot > 1.75 ? Math.min(1, (boot - 1.75) / .3) : 0;
+                eyeOn[0] = bt > 1.4 ? Math.min(1, (bt - 1.4) / .3) : 0;
+                eyeOn[1] = bt > 1.75 ? Math.min(1, (bt - 1.75) / .3) : 0;
             }
             if (glitching) {
                 var amp = clickGlitch ? .16 : .10;
@@ -717,7 +716,7 @@
 
             // terminals: live typing + drift (fade out on scroll / during early boot)
             termL.update(); termR.update();
-            var termP = heroPower * (boot > 0 ? Math.min(1, Math.max(0, (boot - .8) / .8)) : (booting ? 0 : 1));
+            var termP = heroPower * (bt > 0 ? Math.min(1, Math.max(0, (bt - .8) / .8)) : 1);
             panelL.position.y = .55 + Math.sin(t * .8) * .05;
             panelR.position.y = .9 + Math.sin(t * .8 + 1.6) * .05;
             panelL.material.opacity = (.85 + Math.sin(t * 2.1) * .06) * termP;
