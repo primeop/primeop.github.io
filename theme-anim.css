@@ -161,7 +161,7 @@ section, footer { background: transparent !important; }
     padding: 14px 0;
 }
 .navbar.scrolled { background: transparent !important; }
-.nav-container { display: flex; align-items: center; justify-content: space-between; }
+.nav-container { display: flex; align-items: center; justify-content: center; }
 .nav-logo span {
     font-family: 'Courier New', ui-monospace, monospace; font-weight: 700;
     font-size: 14px; letter-spacing: .18em; color: var(--text-primary);
