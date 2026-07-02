@@ -68,6 +68,7 @@
 
     /* ================= HERO INTRO ================= */
     function startIntro() {
+        if (typeof window.__prim30pBoot === 'function') window.__prim30pBoot();
         if (!hasGSAP || reducedMotion) return;
         if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
         var tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
@@ -340,10 +341,10 @@
             sp.scale.set(size, size, 1);
             return sp;
         }
-        var eyes = [];
+        var eyes = [], eyeGlows = [];
         [-1, 1].forEach(function (s) {
             var eye = new THREE.Mesh(new THREE.BoxGeometry(.125, .040, .015),
-                new THREE.MeshBasicMaterial({ color: 0x7df3e1 }));
+                new THREE.MeshBasicMaterial({ color: 0x7df3e1, transparent: true }));
             eye.position.set(s * .145, .075, .42);
             eye.rotation.z = s * .12;
             eye.userData.bx = s * .145;
@@ -351,7 +352,9 @@
             eyes.push(eye);
             var gs = glowSprite(.30);
             gs.position.set(s * .145, .075, .43);
+            gs.userData.base = .30;
             headGroup.add(gs);
+            eyeGlows.push(gs);
         });
 
         headGroup.position.y = 1.28;
@@ -436,6 +439,37 @@
         }));
         scene.add(particles);
 
+        // ---- network constellation lines between nearby particles ----
+        var maxLines = 60;
+        var lineGeo = new THREE.BufferGeometry();
+        var linePos = new Float32Array(maxLines * 6);
+        lineGeo.setAttribute('position', new THREE.BufferAttribute(linePos, 3));
+        var netLines = new THREE.LineSegments(lineGeo, new THREE.LineBasicMaterial({
+            color: 0x5eead4, transparent: true, opacity: .14, blending: THREE.AdditiveBlending
+        }));
+        scene.add(netLines);
+        function rebuildNet() {
+            var a = particles.geometry.attributes.position.array, n = 0;
+            for (var x = 0; x < P && n < maxLines; x++) {
+                for (var y2 = x + 1; y2 < P && n < maxLines; y2++) {
+                    var dx = a[x * 3] - a[y2 * 3], dy = a[x * 3 + 1] - a[y2 * 3 + 1], dz = a[x * 3 + 2] - a[y2 * 3 + 2];
+                    if (dx * dx + dy * dy + dz * dz < .55) {
+                        linePos[n * 6] = a[x * 3]; linePos[n * 6 + 1] = a[x * 3 + 1]; linePos[n * 6 + 2] = a[x * 3 + 2];
+                        linePos[n * 6 + 3] = a[y2 * 3]; linePos[n * 6 + 4] = a[y2 * 3 + 1]; linePos[n * 6 + 5] = a[y2 * 3 + 2];
+                        n++;
+                    }
+                }
+            }
+            for (var z = n; z < maxLines; z++) for (var q = 0; q < 6; q++) linePos[z * 6 + q] = 0;
+            netLines.geometry.attributes.position.needsUpdate = true;
+        }
+        // packet pulse travelling toward the figure
+        var packet = new THREE.Mesh(new THREE.SphereGeometry(.03, 8, 8),
+            new THREE.MeshBasicMaterial({ color: 0x67e8f9, transparent: true, blending: THREE.AdditiveBlending }));
+        packet.visible = false;
+        scene.add(packet);
+        var pkFrom = new THREE.Vector3(), pkTo = new THREE.Vector3(0, .3, 0);
+
         // ground glow disc
         var glow = new THREE.Mesh(new THREE.CircleGeometry(1.35, 40),
             new THREE.MeshBasicMaterial({ color: 0x14b8a6, transparent: true, opacity: .08 }));
@@ -472,78 +506,107 @@
         scene.add(scanRing);
 
 
-        // floating terminal windows
-        function codePanel() {
+        // ---- live-typing terminal windows ----
+        var CMDS = [
+            ['whoami', 'root'],
+            ['sudo nmap -sS 10.0.0.0/24', '443/tcp open  https'],
+            ['ssh root@10.0.0.5', 'access granted'],
+            ['hashcat -m 1000 hash.txt', 'Cracked: ********'],
+            ['python3 exploit.py --api', '[+] shell acquired'],
+            ['cat /etc/shadow', 'permission... bypassed'],
+            ['curl -s target/.env', 'AWS_SECRET=**********']
+        ];
+        function makeTerminal(seed) {
             var c = document.createElement('canvas');
-            c.width = 256; c.height = 176;
+            c.width = 256; c.height = 168;
             var ctx = c.getContext('2d');
-            // window body
-            ctx.beginPath();
-            var r = 14, w = 256, h = 176;
-            ctx.moveTo(r, 0); ctx.lineTo(w - r, 0); ctx.arcTo(w, 0, w, r, r);
-            ctx.lineTo(w, h - r); ctx.arcTo(w, h, w - r, h, r);
-            ctx.lineTo(r, h); ctx.arcTo(0, h, 0, h - r, r);
-            ctx.lineTo(0, r); ctx.arcTo(0, 0, r, 0, r);
-            ctx.closePath();
-            ctx.fillStyle = 'rgba(8,13,22,.82)';
-            ctx.fill();
-            ctx.strokeStyle = 'rgba(94,234,212,.35)';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            // title bar dots
-            ['#5eead4', '#a78bfa', '#f472b6'].forEach(function (col, i) {
+            var tex = new THREE.CanvasTexture(c);
+            var mesh = new THREE.Mesh(new THREE.PlaneGeometry(.80, .525),
+                new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: .9, depthWrite: false, side: THREE.DoubleSide }));
+            // typing state
+            var idx = Math.floor(Math.random() * CMDS.length);
+            var phase = 'type', chars = 0, wait = 0, tick = 0;
+            function draw() {
+                var w = 256, h = 168, r = 14;
+                ctx.clearRect(0, 0, w, h);
                 ctx.beginPath();
-                ctx.arc(20 + i * 18, 16, 4.5, 0, Math.PI * 2);
-                ctx.fillStyle = col; ctx.globalAlpha = .8; ctx.fill(); ctx.globalAlpha = 1;
-            });
-            ctx.strokeStyle = 'rgba(255,255,255,.08)';
-            ctx.beginPath(); ctx.moveTo(0, 30); ctx.lineTo(256, 30); ctx.stroke();
-            // prompt + output lines
-            var cmds = [
-                ['whoami', 'root'],
-                ['sudo nmap -sS 10.0.0.0/24', '443/tcp open  https'],
-                ['ssh root@10.0.0.5', 'access granted_'],
-                ['msfconsole -q', 'msf6 exploit(handler) >'],
-                ['hashcat -m 1000 hash.txt', 'Cracked: ********'],
-                ['python3 exploit.py --target api', '[+] shell acquired']
-            ];
-            var pick = cmds[Math.floor(Math.random() * cmds.length)];
-            ctx.font = '600 13px monospace';
-            ctx.fillStyle = 'rgba(94,234,212,.95)';
-            ctx.fillText('$ ' + pick[0], 14, 52);
-            ctx.fillStyle = 'rgba(238,242,248,.75)';
-            ctx.fillText(pick[1], 14, 72);
-            // output bars
-            for (var row = 0; row < 5; row++) {
-                var y = 92 + row * 16, x = 14;
-                var segs = 2 + Math.floor(Math.random() * 3);
-                for (var k = 0; k < segs; k++) {
-                    ctx.fillStyle = 'rgba(198,210,229,' + (.14 + Math.random() * .22) + ')';
-                    var bw = 20 + Math.random() * 52;
-                    ctx.fillRect(x, y, bw, 6);
-                    x += bw + 12;
+                ctx.moveTo(r, 0); ctx.lineTo(w - r, 0); ctx.arcTo(w, 0, w, r, r);
+                ctx.lineTo(w, h - r); ctx.arcTo(w, h, w - r, h, r);
+                ctx.lineTo(r, h); ctx.arcTo(0, h, 0, h - r, r);
+                ctx.lineTo(0, r); ctx.arcTo(0, 0, r, 0, r);
+                ctx.closePath();
+                ctx.fillStyle = 'rgba(8,13,22,.85)'; ctx.fill();
+                ctx.strokeStyle = 'rgba(94,234,212,.38)'; ctx.lineWidth = 2; ctx.stroke();
+                ['#5eead4', '#a78bfa', '#f472b6'].forEach(function (col, i) {
+                    ctx.beginPath(); ctx.arc(20 + i * 18, 16, 4.5, 0, Math.PI * 2);
+                    ctx.fillStyle = col; ctx.globalAlpha = .85; ctx.fill(); ctx.globalAlpha = 1;
+                });
+                ctx.strokeStyle = 'rgba(255,255,255,.08)';
+                ctx.beginPath(); ctx.moveTo(0, 30); ctx.lineTo(256, 30); ctx.stroke();
+                ctx.font = '600 13px monospace';
+                var cmd = CMDS[idx][0], out = CMDS[idx][1];
+                var cur = (Math.floor(tick / 18) % 2) ? '█' : ' ';
+                ctx.fillStyle = 'rgba(94,234,212,.95)';
+                if (phase === 'type') {
+                    ctx.fillText('$ ' + cmd.slice(0, chars) + cur, 14, 54);
+                } else {
+                    ctx.fillText('$ ' + cmd, 14, 54);
+                    ctx.fillStyle = 'rgba(238,242,248,.82)';
+                    if (phase === 'out') ctx.fillText(out.slice(0, chars) + cur, 14, 76);
+                    else { ctx.fillText(out, 14, 76); ctx.fillStyle = 'rgba(94,234,212,.9)'; ctx.fillText('$ ' + cur, 14, 100); }
+                }
+                tex.needsUpdate = true;
+            }
+            draw();
+            function update() {
+                tick++;
+                if (tick % 2 !== 0) { if (tick % 18 === 0) draw(); return; }
+                if (phase === 'type') {
+                    if (chars < CMDS[idx][0].length) { chars++; draw(); }
+                    else { phase = 'pause'; wait = 24; }
+                } else if (phase === 'pause') {
+                    if (--wait <= 0) { phase = 'out'; chars = 0; }
+                } else if (phase === 'out') {
+                    if (chars < CMDS[idx][1].length) { chars++; draw(); }
+                    else { phase = 'done'; wait = 90; draw(); }
+                } else if (phase === 'done') {
+                    if (--wait <= 0) { idx = (idx + 1) % CMDS.length; phase = 'type'; chars = 0; }
                 }
             }
-            var tex = new THREE.CanvasTexture(c);
-            return new THREE.Mesh(new THREE.PlaneGeometry(.78, .54),
-                new THREE.MeshBasicMaterial({
-                    map: tex, transparent: true, opacity: .85,
-                    depthWrite: false, side: THREE.DoubleSide
-                }));
+            return { mesh: mesh, update: update };
         }
-        var panelL = codePanel();
-        panelL.position.set(-1.38, .55, -.25);
-        panelL.rotation.y = .5;
-        scene.add(panelL);
-        var panelR = codePanel();
-        panelR.position.set(1.38, .9, -.35);
-        panelR.rotation.y = -.5;
-        scene.add(panelR);
+        var termL = makeTerminal();
+        termL.mesh.position.set(-1.4, .55, -.25);
+        termL.mesh.rotation.y = .5;
+        scene.add(termL.mesh);
+        var termR = makeTerminal();
+        termR.mesh.position.set(1.4, .9, -.35);
+        termR.mesh.rotation.y = -.5;
+        scene.add(termR.mesh);
+        var panelL = termL.mesh, panelR = termR.mesh;
 
         var mx = 0, my = 0;
+        var proximity = 0;      // 0..1 how close cursor is to the figure
+        var proxTarget = 0;
+        var staring = false;    // cursor directly over the figure
         document.addEventListener('mousemove', function (e) {
             mx = (e.clientX / window.innerWidth) * 2 - 1;
             my = (e.clientY / window.innerHeight) * 2 - 1;
+            var r = mount.getBoundingClientRect();
+            var cx = r.left + r.width / 2, cy = r.top + r.height * .42;
+            var dist = Math.hypot(e.clientX - cx, e.clientY - cy);
+            proxTarget = Math.max(0, 1 - dist / (r.width * .9));
+            staring = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+        });
+        mount.style.cursor = 'pointer';
+
+        // click easter egg
+        var egg = 0;
+        var EGGS = ['access denied — nice try', 'root@prim30p: permission granted', 'you found me. now hire me.', 'trace initiated... just kidding'];
+        mount.addEventListener('click', function () {
+            egg = 1.4;
+            var line = EGGS[Math.floor(Math.random() * EGGS.length)];
+            CMDS[0] = ['whoami', line]; // temporarily surface the response
         });
 
         var t = 0;
@@ -552,73 +615,145 @@
             new IntersectionObserver(function (en) { visible = en[0].isIntersecting; },
                 { threshold: 0 }).observe(mount);
         }
+        // scroll power-down: hero visibility 1..0
+        var heroPower = 1;
+        window.addEventListener('scroll', function () {
+            var vh = window.innerHeight;
+            heroPower = Math.max(0, Math.min(1, 1 - window.scrollY / (vh * .8)));
+        }, { passive: true });
 
+        // boot sequence timer (starts when the section is first entered)
+        var boot = 0; // 0 = not started, then counts up
+        window.__prim30pBoot = function () { boot = 0.0001; };
+        // if loader already gone (repeat visit / reduced motion), boot immediately
+        if (!document.getElementById('loadingScreen')) boot = 0.0001;
+
+        var netTick = 0, frame = 0;
         (function animate() {
             requestAnimationFrame(animate);
             if (!visible) return;
             t += .016;
-            // hood subtly tracks the cursor
-            headGroup.rotation.y += ((mx * .38) - headGroup.rotation.y) * .06;
-            headGroup.rotation.x += ((my * .18) - headGroup.rotation.x) * .06;
-            // levitation
-            char.position.y = -.45 + Math.sin(t * 1.1) * .055;
+            frame++;
+
+            // ---- boot sequence: 0 -> ~2.6s power-on ----
+            var booting = false, bootWake = 1;
+            if (boot > 0) {
+                boot += .016;
+                if (boot < 2.6) { booting = true; bootWake = Math.min(1, boot / 2.6); }
+            }
+            // ease proximity toward target; scroll power fades everything
+            proximity += (proxTarget - proximity) * .08;
+            var power = heroPower * bootWake; // overall aliveness 0..1
+
+            // hood tracks cursor (harder when staring)
+            var trackK = staring ? .62 : .38;
+            headGroup.rotation.y += ((mx * trackK) - headGroup.rotation.y) * (staring ? .11 : .06);
+            headGroup.rotation.x += ((my * .20) - headGroup.rotation.x) * .06;
+
+            // levitation (settles during boot)
+            char.position.y = -.45 + Math.sin(t * 1.1) * .055 * power;
             char.rotation.y = Math.sin(t * .3) * .07;
-            // uplight flicker (hacking...)
+
             var flick = .85 + Math.sin(t * 17) * .08 + Math.sin(t * 53) * .07;
-            screenLight.intensity = 1.35 * flick;
-            // eye pulse + occasional blink
+            screenLight.intensity = 1.35 * flick * power;
+
+            // eye pulse, blink, proximity brighten
             var ep = .75 + Math.sin(t * 2.2) * .25;
             var bp = t % 4.6;
             var blink = bp > 4.35 ? Math.max(.08, 1 - Math.sin((bp - 4.35) / .25 * Math.PI)) : 1;
-            // whole-figure glitch burst every ~7s
+
+            // glitch: periodic burst, plus a hard snap when clicked
             var gp = t % 7.3;
-            var glitching = gp > 7.08;
+            var periodic = gp > 7.08 && !booting;
+            var clickGlitch = egg > 1.0;
+            var glitching = periodic || clickGlitch;
+            if (egg > 0) egg -= .016;
+            // boot: eyes ignite one at a time
+            var eyeOn = [1, 1];
+            if (booting) {
+                eyeOn[0] = boot > 1.4 ? Math.min(1, (boot - 1.4) / .3) : 0;
+                eyeOn[1] = boot > 1.75 ? Math.min(1, (boot - 1.75) / .3) : 0;
+            }
             if (glitching) {
-                var gx = (Math.random() - .5) * .10;
+                var amp = clickGlitch ? .16 : .10;
+                var gx = (Math.random() - .5) * amp;
                 char.position.x = gx;
                 headGroup.position.x = -gx * 1.5;
                 headGroup.position.z = (Math.random() - .5) * .05;
-                char.rotation.z = (Math.random() - .5) * .03;
-                rimM.intensity = 3.2;
+                char.rotation.z = (Math.random() - .5) * (clickGlitch ? .05 : .03);
+                rimM.intensity = clickGlitch ? 4.2 : 3.2;
             } else {
-                char.position.x = 0;
-                headGroup.position.x = 0;
-                headGroup.position.z = 0;
-                char.rotation.z = 0;
+                char.position.x += (0 - char.position.x) * .3;
+                headGroup.position.x += (0 - headGroup.position.x) * .3;
+                headGroup.position.z += (0 - headGroup.position.z) * .3;
+                char.rotation.z += (0 - char.rotation.z) * .3;
                 rimM.intensity = 1.0;
             }
-            eyes.forEach(function (e) {
+            eyes.forEach(function (e, i) {
+                var lit = (glitching ? 1 : (.5 + ep * .18)) * eyeOn[i] * (.6 + power * .4);
                 if (glitching) e.material.color.setHex(Math.random() < .35 ? 0xf472b6 : 0x7df3e1);
-                else e.material.color.setHSL(.46, .85, .5 + ep * .18);
-                e.scale.y = blink;
+                else e.material.color.setHSL(.46, .85, .35 + (.25 + proximity * .3) * (.6 + ep * .4));
+                e.material.opacity = eyeOn[i];
+                e.scale.y = blink * eyeOn[i];
+                var g = eyeGlows[i];
+                g.material.opacity = eyeOn[i] * (glitching ? 1 : .8);
+                g.scale.setScalar(g.userData.base * (1 + proximity * .35 + (glitching ? .3 : 0)) * eyeOn[i]);
             });
-            // radar sweep
-            sweep.rotation.z -= .012;
-            // rising scan pulse every ~6s
+
+            // radar sweep + scan pulse
+            sweep.rotation.z -= .012 * (.4 + power * .6);
+            sweep.material.opacity = .10 * power;
             var st = t % 6;
-            if (st < 1.5) {
+            if (st < 1.5 && power > .3) {
                 scanRing.visible = true;
                 var sp2 = st / 1.5;
                 scanRing.position.y = -1.0 + sp2 * 2.5;
-                scanRing.material.opacity = .45 * Math.sin(sp2 * Math.PI);
+                scanRing.material.opacity = .45 * Math.sin(sp2 * Math.PI) * power;
                 scanRing.scale.setScalar(1 - sp2 * .38);
             } else scanRing.visible = false;
-            // subtle breathing
+
+            // breathing
             shoulders.scale.y = 1.1 + Math.sin(t * 1.4) * .012;
-            // floating code panels drift
+
+            // terminals: live typing + drift (fade out on scroll / during early boot)
+            termL.update(); termR.update();
+            var termP = heroPower * (boot > 0 ? Math.min(1, Math.max(0, (boot - .8) / .8)) : (booting ? 0 : 1));
             panelL.position.y = .55 + Math.sin(t * .8) * .05;
             panelR.position.y = .9 + Math.sin(t * .8 + 1.6) * .05;
-            panelL.material.opacity = .8 + Math.sin(t * 2.1) * .08;
-            panelR.material.opacity = .8 + Math.sin(t * 1.7 + .8) * .08;
-            // rings + particles
-            ring1.rotation.z += .0022;
-            ring2.rotation.z -= .0015;
+            panelL.material.opacity = (.85 + Math.sin(t * 2.1) * .06) * termP;
+            panelR.material.opacity = (.85 + Math.sin(t * 1.7 + .8) * .06) * termP;
+
+            // rings (spin up fast during boot)
+            var ringSpin = booting ? .02 : .0022;
+            ring1.rotation.z += ringSpin;
+            ring2.rotation.z -= ringSpin * .7;
+            ring1.material.opacity = .28 * power;
+            ring2.material.opacity = .16 * power;
+
+            // particles rise
             var arr = particles.geometry.attributes.position.array;
             for (var i = 0; i < P; i++) {
                 arr[i * 3 + 1] += speed[i] * .016;
                 if (arr[i * 3 + 1] > 2.6) arr[i * 3 + 1] = -1.7;
             }
             particles.geometry.attributes.position.needsUpdate = true;
+            particles.material.opacity = .55 * power;
+
+            // network constellation (rebuild every ~8 frames) + packet pulse
+            if (frame % 8 === 0) rebuildNet();
+            netLines.material.opacity = .14 * power * (.7 + proximity * .5);
+            netTick += .016;
+            var pk = netTick % 3.2;
+            if (pk < 1 && power > .4) {
+                if (pk < .02) {
+                    var pi = Math.floor(Math.random() * P);
+                    pkFrom.set(arr[pi * 3], arr[pi * 3 + 1], arr[pi * 3 + 2]);
+                }
+                packet.visible = true;
+                packet.position.lerpVectors(pkFrom, pkTo, pk);
+                packet.material.opacity = Math.sin(pk * Math.PI);
+            } else packet.visible = false;
+
             renderer.render(scene, camera);
         })();
 
