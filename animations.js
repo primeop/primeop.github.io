@@ -560,9 +560,9 @@
         eggCanvas.width = 384; eggCanvas.height = 168;
         var ectx = eggCanvas.getContext('2d');
         var eggTex = new THREE.CanvasTexture(eggCanvas);
-        var eggMesh = new THREE.Mesh(new THREE.PlaneGeometry(1.5, .656),
+        var eggMesh = new THREE.Mesh(new THREE.PlaneGeometry(1.4, .613),
             new THREE.MeshBasicMaterial({ map: eggTex, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide }));
-        eggMesh.position.set(0, 1.35, 1.0);
+        eggMesh.position.set(0, 0.55, 1.45);
         eggMesh.visible = false;
         scene.add(eggMesh);
         function drawEgg(msg, typed) {
@@ -760,7 +760,7 @@
                     else { sc = 1; op = 1; }
                     eggMesh.scale.setScalar(sc);
                     eggMesh.material.opacity = op;
-                    eggMesh.position.y = 1.35 + Math.sin(t * 3) * .02;
+                    eggMesh.position.y = 0.55 + Math.sin(t * 3) * .02;
                     var typed = Math.min(eggMsg.length, Math.floor(Math.max(0, e - .35) * 34));
                     drawEgg(eggMsg, typed);
                 } else { eggMesh.visible = false; eggStart = 0; }
