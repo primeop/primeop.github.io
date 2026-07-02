@@ -498,13 +498,24 @@
             });
             ctx.strokeStyle = 'rgba(255,255,255,.08)';
             ctx.beginPath(); ctx.moveTo(0, 30); ctx.lineTo(256, 30); ctx.stroke();
-            // prompt line
+            // prompt + output lines
+            var cmds = [
+                ['whoami', 'root'],
+                ['sudo nmap -sS 10.0.0.0/24', '443/tcp open  https'],
+                ['ssh root@10.0.0.5', 'access granted_'],
+                ['msfconsole -q', 'msf6 exploit(handler) >'],
+                ['hashcat -m 1000 hash.txt', 'Cracked: ********'],
+                ['python3 exploit.py --target api', '[+] shell acquired']
+            ];
+            var pick = cmds[Math.floor(Math.random() * cmds.length)];
             ctx.font = '600 13px monospace';
             ctx.fillStyle = 'rgba(94,234,212,.95)';
-            ctx.fillText('$ ' + ['nmap -sV target', 'go run exploit.go', 'terraform plan', 'burp --scan api'][Math.floor(Math.random() * 4)], 14, 52);
+            ctx.fillText('$ ' + pick[0], 14, 52);
+            ctx.fillStyle = 'rgba(238,242,248,.75)';
+            ctx.fillText(pick[1], 14, 72);
             // output bars
-            for (var row = 0; row < 6; row++) {
-                var y = 72 + row * 17, x = 14;
+            for (var row = 0; row < 5; row++) {
+                var y = 92 + row * 16, x = 14;
                 var segs = 2 + Math.floor(Math.random() * 3);
                 for (var k = 0; k < segs; k++) {
                     ctx.fillStyle = 'rgba(198,210,229,' + (.14 + Math.random() * .22) + ')';
