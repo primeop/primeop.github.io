@@ -546,7 +546,7 @@
             return { mesh: mesh, update: update };
         }
         var termL = makeTerminal();
-        termL.mesh.position.set(-1.4, .55, -.25);
+        termL.mesh.position.set(-1.18, .55, -.25);
         termL.mesh.rotation.y = .5;
         scene.add(termL.mesh);
         var termR = makeTerminal();
@@ -608,7 +608,7 @@
 
         // click easter egg
         var egg = 0;
-        var EGGS = ['access denied — nice try ;)', 'permission granted. now hire me.', 'you found me. let\'s talk.', 'trace initiated... just kidding.', 'root shell acquired. impressed?'];
+        var EGGS = ['access denied — nice try ;)', 'permission denied — hire me.', 'you found me. let\'s talk.', 'trace initiated... just kidding.'];
         mount.addEventListener('click', function () {
             egg = 1.0;
             if (!eggStart) { eggMsg = EGGS[Math.floor(Math.random() * EGGS.length)]; eggStart = performance.now(); }
