@@ -373,6 +373,14 @@
         var neck = new THREE.Mesh(new THREE.CylinderGeometry(.30, .42, .55, 32), cloakInner);
         neck.position.y = .85;
         char.add(neck);
+        // cowl — bridges the hood into the shoulders so there are no gaps
+        var cowl = new THREE.Mesh(new THREE.CylinderGeometry(.46, .66, .60, 56, 1, true), cloakMat);
+        cowl.position.y = .90;
+        char.add(cowl);
+        var cowlBack = new THREE.Mesh(new THREE.SphereGeometry(.52, 40, 28, 0, Math.PI * 2, 0, Math.PI / 2), cloakMat);
+        cowlBack.position.set(0, 1.02, -.08);
+        cowlBack.scale.set(1.05, .75, .95);
+        char.add(cowlBack);
         // collar seam
         var collarSeam = new THREE.Mesh(new THREE.TorusGeometry(.41, .020, 10, 48), cloakInner);
         collarSeam.rotation.x = Math.PI / 2 - .12;
@@ -463,42 +471,6 @@
         scanRing.visible = false;
         scene.add(scanRing);
 
-        // ---- digital rain planes behind the figure ----
-        var rainCanvas = document.createElement('canvas');
-        rainCanvas.width = 192; rainCanvas.height = 384;
-        var rctx = rainCanvas.getContext('2d');
-        var rainCols = 16, drops = [];
-        for (var rc = 0; rc < rainCols; rc++) drops.push(Math.random() * 24);
-        var glyphs = '01<>/{}[]$#@&*+=;:01アイウエオカキクケコ';
-        var rainTex = new THREE.CanvasTexture(rainCanvas);
-        function stepRain() {
-            rctx.globalCompositeOperation = 'destination-out';
-            rctx.fillStyle = 'rgba(0,0,0,.07)';
-            rctx.fillRect(0, 0, 192, 384);
-            rctx.globalCompositeOperation = 'source-over';
-            rctx.font = '13px monospace';
-            for (var i = 0; i < rainCols; i++) {
-                if (Math.random() < .5) continue;
-                rctx.fillStyle = Math.random() < .12 ? 'rgba(167,139,250,.9)' : 'rgba(94,234,212,.85)';
-                rctx.fillText(glyphs[Math.floor(Math.random() * glyphs.length)],
-                    i * 12 + 2, (drops[i] % 26) * 15);
-                drops[i] += .55 + Math.random() * .3;
-            }
-            rainTex.needsUpdate = true;
-        }
-        var rainMatBase = new THREE.MeshBasicMaterial({
-            map: rainTex, transparent: true, opacity: .16,
-            depthWrite: false, side: THREE.DoubleSide
-        });
-        var rain1 = new THREE.Mesh(new THREE.PlaneGeometry(2.0, 4.0), rainMatBase);
-        rain1.position.set(-.9, .5, -1.5);
-        rain1.rotation.y = .25;
-        scene.add(rain1);
-        var rain2 = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 3.2), rainMatBase.clone());
-        rain2.material.opacity = .10;
-        rain2.position.set(1.1, .3, -1.9);
-        rain2.rotation.y = -.3;
-        scene.add(rain2);
 
         // floating terminal windows
         function codePanel() {
@@ -583,24 +555,33 @@
             // uplight flicker (hacking...)
             var flick = .85 + Math.sin(t * 17) * .08 + Math.sin(t * 53) * .07;
             screenLight.intensity = 1.35 * flick;
-            // eye pulse + occasional blink + rare glitch
+            // eye pulse + occasional blink
             var ep = .75 + Math.sin(t * 2.2) * .25;
             var bp = t % 4.6;
             var blink = bp > 4.35 ? Math.max(.08, 1 - Math.sin((bp - 4.35) / .25 * Math.PI)) : 1;
+            // whole-figure glitch burst every ~7s
             var gp = t % 7.3;
-            var glitching = gp > 7.12;
+            var glitching = gp > 7.08;
+            if (glitching) {
+                var gx = (Math.random() - .5) * .10;
+                char.position.x = gx;
+                headGroup.position.x = -gx * 1.5;
+                headGroup.position.z = (Math.random() - .5) * .05;
+                char.rotation.z = (Math.random() - .5) * .03;
+                rimM.intensity = 3.2;
+            } else {
+                char.position.x = 0;
+                headGroup.position.x = 0;
+                headGroup.position.z = 0;
+                char.rotation.z = 0;
+                rimM.intensity = 1.0;
+            }
             eyes.forEach(function (e) {
-                if (glitching) {
-                    e.position.x = e.userData.bx + (Math.random() - .5) * .04;
-                    e.material.color.setHex(Math.random() < .35 ? 0xf472b6 : 0x7df3e1);
-                } else {
-                    e.position.x = e.userData.bx;
-                    e.material.color.setHSL(.46, .85, .5 + ep * .18);
-                }
+                if (glitching) e.material.color.setHex(Math.random() < .35 ? 0xf472b6 : 0x7df3e1);
+                else e.material.color.setHSL(.46, .85, .5 + ep * .18);
                 e.scale.y = blink;
             });
-            // digital rain + radar sweep
-            stepRain();
+            // radar sweep
             sweep.rotation.z -= .012;
             // rising scan pulse every ~6s
             var st = t % 6;
