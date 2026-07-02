@@ -16,7 +16,9 @@
     function initLoader() {
         var screen = document.getElementById('loadingScreen');
         if (!screen) return;
-        if (reducedMotion) { screen.remove(); startIntro(); return; }
+        var seen = false;
+        try { seen = sessionStorage.getItem('prim30p-entered') === '1'; } catch (e) { }
+        if (reducedMotion || seen) { screen.remove(); startIntro(); return; }
 
         document.documentElement.style.overflow = 'hidden';
         var wrap = document.getElementById('loadingWrap');
@@ -51,6 +53,7 @@
         function enter() {
             if (!done || entered) return;
             entered = true;
+            try { sessionStorage.setItem('prim30p-entered', '1'); } catch (e) { }
             wrap.classList.add('loading-clicked');
             screen.classList.add('loading-done');
             document.documentElement.style.overflow = '';
