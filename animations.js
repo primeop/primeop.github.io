@@ -317,23 +317,23 @@
             hole.scale.set(1.25, .72, .35);
             hole.rotation.z = s * .18;
             mask.add(hole);
-            var glint = new THREE.Mesh(new THREE.SphereGeometry(.028, 12, 12), eyeMat);
+            var glint = new THREE.Mesh(new THREE.SphereGeometry(.018, 12, 12), eyeMat);
             glint.position.set(s * .15, .10, .20);
             mask.add(glint);
             eyes.push(glint);
         });
-        // raised eyebrows — angled up toward the temples
+        // raised eyebrows — outer ends angled up toward the temples
         [-1, 1].forEach(function (s) {
-            var brow = new THREE.Mesh(new THREE.BoxGeometry(.155, .024, .02), featMat);
-            brow.position.set(s * .155, .195, .19);
-            brow.rotation.z = -.42 * s;
+            var brow = new THREE.Mesh(new THREE.BoxGeometry(.135, .022, .02), featMat);
+            brow.position.set(s * .15, .185, .19);
+            brow.rotation.z = .38 * s;
             mask.add(brow);
         });
-        // rosy cheeks
+        // faint cheek tint
         [-1, 1].forEach(function (s) {
-            var cheek = new THREE.Mesh(new THREE.SphereGeometry(.055, 16, 16), blushMat);
-            cheek.position.set(s * .21, -.045, .16);
-            cheek.scale.set(1.15, .8, .3);
+            var cheek = new THREE.Mesh(new THREE.SphereGeometry(.04, 16, 16), blushMat);
+            cheek.position.set(s * .20, -.05, .175);
+            cheek.scale.set(1.1, .7, .25);
             mask.add(cheek);
         });
         // nose ridge
@@ -342,13 +342,15 @@
         nose.rotation.x = 1.35;
         nose.scale.set(1, 1, .7);
         mask.add(nose);
-        // upturned mustache — two arcs
+        // wide mustache with upturned tips
+        var stacheMid = new THREE.Mesh(new THREE.BoxGeometry(.20, .026, .02), featMat);
+        stacheMid.position.set(0, -.155, .205);
+        mask.add(stacheMid);
         [-1, 1].forEach(function (s) {
-            var stache = new THREE.Mesh(new THREE.TorusGeometry(.085, .020, 10, 24, 1.7), featMat);
-            stache.position.set(s * .095, -.155, .195);
-            stache.rotation.set(.1, s * .35, s === 1 ? -.45 : Math.PI - 2.6);
-            stache.scale.set(1, 1, .5);
-            mask.add(stache);
+            var tip = new THREE.Mesh(new THREE.BoxGeometry(.09, .022, .02), featMat);
+            tip.position.set(s * .135, -.132, .20);
+            tip.rotation.z = s * .55;
+            mask.add(tip);
         });
         // soul patch goatee
         var goatee = new THREE.Mesh(new THREE.ConeGeometry(.035, .13, 12), featMat);
@@ -356,13 +358,6 @@
         goatee.rotation.x = Math.PI + .25;
         goatee.scale.set(1, 1, .5);
         mask.add(goatee);
-        // subtle smile line
-        var smile = new THREE.Mesh(new THREE.TorusGeometry(.075, .011, 8, 24, 1.4), featMat);
-        smile.position.set(0, -.19, .185);
-        smile.rotation.set(.2, 0, Math.PI + (Math.PI - 1.4) / 2);
-        smile.scale.set(1, 1, .45);
-        mask.add(smile);
-
         mask.position.set(0, .02, .30);
         headGroup.add(mask);
 
