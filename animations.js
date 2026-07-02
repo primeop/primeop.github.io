@@ -244,9 +244,10 @@
 
         var W = mount.clientWidth, H = mount.clientHeight;
         var scene = new THREE.Scene();
+        var CHAR_SCALE = 1.2;   // overall figure size
         var camera = new THREE.PerspectiveCamera(36, W / H, 0.1, 100);
-        camera.position.set(0, 0.55, 4.6);
-        camera.lookAt(0, 0.32, 0);
+        camera.position.set(0, 0.5, 4.35);
+        camera.lookAt(0, 0.34, 0);
         var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(W, H);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -439,36 +440,6 @@
         }));
         scene.add(particles);
 
-        // ---- network constellation lines between nearby particles ----
-        var maxLines = 60;
-        var lineGeo = new THREE.BufferGeometry();
-        var linePos = new Float32Array(maxLines * 6);
-        lineGeo.setAttribute('position', new THREE.BufferAttribute(linePos, 3));
-        var netLines = new THREE.LineSegments(lineGeo, new THREE.LineBasicMaterial({
-            color: 0x5eead4, transparent: true, opacity: .14, blending: THREE.AdditiveBlending
-        }));
-        scene.add(netLines);
-        function rebuildNet() {
-            var a = particles.geometry.attributes.position.array, n = 0;
-            for (var x = 0; x < P && n < maxLines; x++) {
-                for (var y2 = x + 1; y2 < P && n < maxLines; y2++) {
-                    var dx = a[x * 3] - a[y2 * 3], dy = a[x * 3 + 1] - a[y2 * 3 + 1], dz = a[x * 3 + 2] - a[y2 * 3 + 2];
-                    if (dx * dx + dy * dy + dz * dz < .55) {
-                        linePos[n * 6] = a[x * 3]; linePos[n * 6 + 1] = a[x * 3 + 1]; linePos[n * 6 + 2] = a[x * 3 + 2];
-                        linePos[n * 6 + 3] = a[y2 * 3]; linePos[n * 6 + 4] = a[y2 * 3 + 1]; linePos[n * 6 + 5] = a[y2 * 3 + 2];
-                        n++;
-                    }
-                }
-            }
-            for (var z = n; z < maxLines; z++) for (var q = 0; q < 6; q++) linePos[z * 6 + q] = 0;
-            netLines.geometry.attributes.position.needsUpdate = true;
-        }
-        // packet pulse travelling toward the figure
-        var packet = new THREE.Mesh(new THREE.SphereGeometry(.03, 8, 8),
-            new THREE.MeshBasicMaterial({ color: 0x67e8f9, transparent: true, blending: THREE.AdditiveBlending }));
-        packet.visible = false;
-        scene.add(packet);
-        var pkFrom = new THREE.Vector3(), pkTo = new THREE.Vector3(0, .3, 0);
 
         // ground glow disc
         var glow = new THREE.Mesh(new THREE.CircleGeometry(1.35, 40),
@@ -653,6 +624,16 @@
             // levitation (settles during boot)
             char.position.y = -.45 + Math.sin(t * 1.1) * .055 * power;
             char.rotation.y = Math.sin(t * .3) * .07;
+            // entrance pop with spring overshoot, then gentle attention pulse
+            var popScale;
+            if (bt > 0 && bt < 1.1) {
+                var pb = bt / 1.1;
+                popScale = 1 + (1 - Math.pow(1 - pb, 3)) * 0 + Math.sin(pb * Math.PI) * .12; // rise + overshoot
+                popScale *= .55 + .45 * (1 - Math.pow(1 - pb, 2));
+            } else {
+                popScale = 1 + Math.sin(t * 1.3) * .018; // idle breathing pulse
+            }
+            char.scale.setScalar(CHAR_SCALE * popScale);
 
             var flick = .85 + Math.sin(t * 17) * .08 + Math.sin(t * 53) * .07;
             screenLight.intensity = 1.35 * flick * alive;
@@ -738,21 +719,6 @@
             }
             particles.geometry.attributes.position.needsUpdate = true;
             particles.material.opacity = .55 * power;
-
-            // network constellation (rebuild every ~8 frames) + packet pulse
-            if (frame % 8 === 0) rebuildNet();
-            netLines.material.opacity = .14 * power * (.7 + proximity * .5);
-            netTick += .016;
-            var pk = netTick % 3.2;
-            if (pk < 1 && power > .4) {
-                if (pk < .02) {
-                    var pi = Math.floor(Math.random() * P);
-                    pkFrom.set(arr[pi * 3], arr[pi * 3 + 1], arr[pi * 3 + 2]);
-                }
-                packet.visible = true;
-                packet.position.lerpVectors(pkFrom, pkTo, pk);
-                packet.material.opacity = Math.sin(pk * Math.PI);
-            } else packet.visible = false;
 
             renderer.render(scene, camera);
         })();
