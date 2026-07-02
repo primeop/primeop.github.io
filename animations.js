@@ -240,25 +240,30 @@
 
         var W = mount.clientWidth, H = mount.clientHeight;
         var scene = new THREE.Scene();
-        var camera = new THREE.PerspectiveCamera(38, W / H, 0.1, 100);
-        camera.position.set(0, 0.35, 5.8);
-        camera.lookAt(0, 0.05, 0);
+        var camera = new THREE.PerspectiveCamera(36, W / H, 0.1, 100);
+        camera.position.set(0, 0.55, 4.6);
+        camera.lookAt(0, 0.32, 0);
         var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(W, H);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.outputEncoding = THREE.sRGBEncoding;
         mount.appendChild(renderer.domElement);
 
-        // lights — teal key, magenta rim (like inspiration)
-        scene.add(new THREE.AmbientLight(0x8899aa, 0.55));
-        var key = new THREE.DirectionalLight(0xffffff, 0.9);
+        // lights — soft hemisphere base, teal key, magenta rim
+        scene.add(new THREE.HemisphereLight(0x44566e, 0x0a0f18, .75));
+        scene.add(new THREE.AmbientLight(0x8899aa, 0.35));
+        var key = new THREE.DirectionalLight(0xffffff, 0.75);
         key.position.set(2, 4, 3);
         scene.add(key);
-        var rimT = new THREE.PointLight(0x5eead4, 1.4, 12);
+        var rimT = new THREE.PointLight(0x5eead4, 1.3, 12);
         rimT.position.set(-3, 1.5, 1.5);
         scene.add(rimT);
-        var rimM = new THREE.PointLight(0xf472b6, 1.1, 12);
+        var rimM = new THREE.PointLight(0xf472b6, 1.0, 12);
         rimM.position.set(3, 2.5, -1);
         scene.add(rimM);
+        var back = new THREE.PointLight(0x67e8f9, .8, 10);
+        back.position.set(0, 2.2, -2.5);
+        scene.add(back);
 
         var char = new THREE.Group();
         var headGroup = new THREE.Group();
@@ -272,7 +277,7 @@
         var hoodPts = [];
         [[0, .62], [.30, .58], [.48, .44], [.56, .22], [.55, 0], [.48, -.22], [.40, -.38]]
             .forEach(function (p) { hoodPts.push(new THREE.Vector2(p[0], p[1])); });
-        var hood = new THREE.Mesh(new THREE.LatheGeometry(hoodPts, 36), cloakMat);
+        var hood = new THREE.Mesh(new THREE.LatheGeometry(hoodPts, 56), cloakMat);
         hood.scale.set(1, 1.12, 1);
         hood.rotation.x = .22;
         headGroup.add(hood);
@@ -289,11 +294,14 @@
 
         // ---- Guy Fawkes style mask ----
         var mask = new THREE.Group();
-        var maskMat = new THREE.MeshStandardMaterial({ color: 0xf2efe6, roughness: .35, metalness: .02 });
+        var maskMat = new THREE.MeshPhysicalMaterial({
+            color: 0xf5f2ea, roughness: .18, metalness: 0,
+            clearcoat: 1, clearcoatRoughness: .25
+        });
         var featMat = new THREE.MeshStandardMaterial({ color: 0x0a0c12, roughness: .5 });
         var blushMat = new THREE.MeshStandardMaterial({ color: 0xd98f8f, roughness: .6 });
         // face shell — tapers to a pointed chin
-        var shell = new THREE.Mesh(new THREE.SphereGeometry(.40, 36, 36), maskMat);
+        var shell = new THREE.Mesh(new THREE.SphereGeometry(.40, 56, 56), maskMat);
         shell.scale.set(.92, 1.22, .5);
         mask.add(shell);
         var chin = new THREE.Mesh(new THREE.ConeGeometry(.20, .34, 24), maskMat);
@@ -361,61 +369,29 @@
         headGroup.position.y = 1.28;
         char.add(headGroup);
 
-        // ---- cloaked body (widening robe) ----
-        var robe = new THREE.Mesh(new THREE.CylinderGeometry(.42, 1.05, 2.0, 36, 1, true), cloakMat);
-        robe.position.y = .1;
-        char.add(robe);
-        var robeCap = new THREE.Mesh(new THREE.CircleGeometry(1.05, 36), cloakInner);
-        robeCap.rotation.x = Math.PI / 2;
-        robeCap.position.y = -.9;
-        char.add(robeCap);
-        var chest = new THREE.Mesh(new THREE.SphereGeometry(.46, 28, 20), cloakMat);
-        chest.position.y = .95;
-        chest.scale.set(1.2, .7, .9);
-        char.add(chest);
+        // ---- bust: hood flows into smooth shoulders, clean cut at the chest ----
+        var shoulders = new THREE.Mesh(
+            new THREE.SphereGeometry(.72, 56, 36, 0, Math.PI * 2, 0, Math.PI / 2), cloakMat);
+        shoulders.position.y = .30;
+        shoulders.scale.set(1.32, 1.1, .92);
+        char.add(shoulders);
+        // chest cut underside
+        var cut = new THREE.Mesh(new THREE.CircleGeometry(.72, 56), cloakInner);
+        cut.rotation.x = Math.PI / 2;
+        cut.position.y = .30;
+        cut.scale.set(1.32, .92, 1);
+        char.add(cut);
+        // neck shadow connecting hood to shoulders
+        var neck = new THREE.Mesh(new THREE.CylinderGeometry(.30, .42, .55, 32), cloakInner);
+        neck.position.y = .85;
+        char.add(neck);
 
-        // ---- arms reaching to laptop ----
-        [-1, 1].forEach(function (s) {
-            var arm = new THREE.Mesh(new THREE.CylinderGeometry(.11, .14, .95, 16), cloakMat);
-            arm.position.set(s * .52, .55, .38);
-            arm.rotation.set(.9, 0, s * .55);
-            char.add(arm);
-            var sleeve = new THREE.Mesh(new THREE.CylinderGeometry(.15, .19, .30, 16), cloakMat);
-            sleeve.position.set(s * .70, .28, .62);
-            sleeve.rotation.set(.9, 0, s * .55);
-            char.add(sleeve);
-        });
-
-        // ---- floating laptop with emissive screen ----
-        var laptop = new THREE.Group();
-        var lapBase = new THREE.Mesh(new THREE.BoxGeometry(1.05, .05, .68),
-            new THREE.MeshStandardMaterial({ color: 0x11151f, roughness: .4, metalness: .5 }));
-        laptop.add(lapBase);
-        var keys = new THREE.Mesh(new THREE.PlaneGeometry(.92, .5),
-            new THREE.MeshStandardMaterial({ color: 0x1a2130, roughness: .6, emissive: 0x14b8a6, emissiveIntensity: .12 }));
-        keys.rotation.x = -Math.PI / 2;
-        keys.position.y = .028;
-        laptop.add(keys);
-        var lidGroup = new THREE.Group();
-        var lid = new THREE.Mesh(new THREE.BoxGeometry(1.05, .62, .035),
-            new THREE.MeshStandardMaterial({ color: 0x11151f, roughness: .4, metalness: .5 }));
-        lid.position.y = .31;
-        lidGroup.add(lid);
-        var screenMat = new THREE.MeshBasicMaterial({ color: 0x36e6c4 });
-        var screen = new THREE.Mesh(new THREE.PlaneGeometry(.94, .52), screenMat);
-        screen.position.set(0, .31, .022);
-        lidGroup.add(screen);
-        lidGroup.position.z = -.33;
-        lidGroup.rotation.x = -.35;
-        laptop.add(lidGroup);
-        laptop.position.set(0, .18, .85);
-        char.add(laptop);
-        // screen glow lighting the hood
-        var screenLight = new THREE.PointLight(0x36e6c4, 1.6, 4.5);
-        screenLight.position.set(0, .6, .95);
+        // uplight — glow from below, as if from an unseen screen
+        var screenLight = new THREE.PointLight(0x36e6c4, 1.5, 5);
+        screenLight.position.set(0, -.1, 1.35);
         char.add(screenLight);
 
-        char.position.y = -.85;
+        char.position.y = -.45;
         scene.add(char);
 
         // ---- holographic rings ----
@@ -423,14 +399,14 @@
             color: 0x5eead4, transparent: true, opacity: .28,
             blending: THREE.AdditiveBlending, side: THREE.DoubleSide
         });
-        var ring1 = new THREE.Mesh(new THREE.TorusGeometry(1.55, .012, 8, 80), ringMat);
+        var ring1 = new THREE.Mesh(new THREE.TorusGeometry(1.25, .012, 8, 90), ringMat);
         ring1.rotation.x = Math.PI / 2.15;
-        ring1.position.y = -.35;
+        ring1.position.y = -.42;
         scene.add(ring1);
-        var ring2 = new THREE.Mesh(new THREE.TorusGeometry(1.85, .008, 8, 80), ringMat.clone());
+        var ring2 = new THREE.Mesh(new THREE.TorusGeometry(1.55, .008, 8, 90), ringMat.clone());
         ring2.material.opacity = .16;
         ring2.rotation.x = Math.PI / 1.95;
-        ring2.position.y = -.15;
+        ring2.position.y = -.22;
         scene.add(ring2);
 
         // ---- drifting code particles ----
@@ -450,10 +426,10 @@
         scene.add(particles);
 
         // ground glow disc
-        var glow = new THREE.Mesh(new THREE.CircleGeometry(1.7, 40),
+        var glow = new THREE.Mesh(new THREE.CircleGeometry(1.35, 40),
             new THREE.MeshBasicMaterial({ color: 0x14b8a6, transparent: true, opacity: .10 }));
         glow.rotation.x = -Math.PI / 2;
-        glow.position.y = -1.7;
+        glow.position.y = -1.05;
         scene.add(glow);
 
         var mx = 0, my = 0;
@@ -477,12 +453,11 @@
             headGroup.rotation.y += ((mx * .38) - headGroup.rotation.y) * .06;
             headGroup.rotation.x += ((my * .18) - headGroup.rotation.x) * .06;
             // levitation
-            char.position.y = -.85 + Math.sin(t * 1.1) * .06;
-            char.rotation.y = Math.sin(t * .3) * .05;
-            // screen flicker (hacking...)
+            char.position.y = -.45 + Math.sin(t * 1.1) * .055;
+            char.rotation.y = Math.sin(t * .3) * .07;
+            // uplight flicker (hacking...)
             var flick = .85 + Math.sin(t * 17) * .08 + Math.sin(t * 53) * .07;
-            screenLight.intensity = 1.4 * flick;
-            screenMat.color.setHSL(.46, .78, .38 + flick * .18);
+            screenLight.intensity = 1.35 * flick;
             // eye pulse
             var ep = .75 + Math.sin(t * 2.2) * .25;
             eyes.forEach(function (e) { e.material.color.setHSL(.46, .85, .45 + ep * .2); });
