@@ -244,10 +244,9 @@
 
         var W = mount.clientWidth, H = mount.clientHeight;
         var scene = new THREE.Scene();
-        var CHAR_SCALE = 1.2;   // overall figure size
         var camera = new THREE.PerspectiveCamera(36, W / H, 0.1, 100);
-        camera.position.set(0, 0.5, 4.35);
-        camera.lookAt(0, 0.34, 0);
+        camera.position.set(0, 0.55, 4.6);
+        camera.lookAt(0, 0.32, 0);
         var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(W, H);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -556,6 +555,42 @@
         scene.add(termR.mesh);
         var panelL = termL.mesh, panelR = termR.mesh;
 
+        // ---- easter-egg popup terminal (hidden until the figure is clicked) ----
+        var eggCanvas = document.createElement('canvas');
+        eggCanvas.width = 384; eggCanvas.height = 168;
+        var ectx = eggCanvas.getContext('2d');
+        var eggTex = new THREE.CanvasTexture(eggCanvas);
+        var eggMesh = new THREE.Mesh(new THREE.PlaneGeometry(1.5, .656),
+            new THREE.MeshBasicMaterial({ map: eggTex, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide }));
+        eggMesh.position.set(0, 1.35, 1.0);
+        eggMesh.visible = false;
+        scene.add(eggMesh);
+        function drawEgg(msg, typed) {
+            var w = 384, h = 168, r = 18;
+            ectx.clearRect(0, 0, w, h);
+            ectx.beginPath();
+            ectx.moveTo(r, 0); ectx.lineTo(w - r, 0); ectx.arcTo(w, 0, w, r, r);
+            ectx.lineTo(w, h - r); ectx.arcTo(w, h, w - r, h, r);
+            ectx.lineTo(r, h); ectx.arcTo(0, h, 0, h - r, r);
+            ectx.lineTo(0, r); ectx.arcTo(0, 0, r, 0, r);
+            ectx.closePath();
+            ectx.fillStyle = 'rgba(8,13,22,.95)'; ectx.fill();
+            ectx.strokeStyle = 'rgba(244,114,182,.6)'; ectx.lineWidth = 2.5; ectx.stroke();
+            ['#5eead4', '#a78bfa', '#f472b6'].forEach(function (col, i) {
+                ectx.beginPath(); ectx.arc(24 + i * 20, 20, 5.5, 0, Math.PI * 2);
+                ectx.fillStyle = col; ectx.globalAlpha = .9; ectx.fill(); ectx.globalAlpha = 1;
+            });
+            ectx.strokeStyle = 'rgba(255,255,255,.08)';
+            ectx.beginPath(); ectx.moveTo(0, 38); ectx.lineTo(w, 38); ectx.stroke();
+            ectx.font = '700 17px monospace';
+            ectx.fillStyle = 'rgba(94,234,212,.95)';
+            ectx.fillText('$ ./access.sh', 18, 72);
+            ectx.fillStyle = 'rgba(244,114,182,.95)';
+            ectx.fillText(msg.slice(0, typed) + ((Math.floor(t * 8) % 2) ? '█' : ''), 18, 108);
+            eggTex.needsUpdate = true;
+        }
+        var eggStart = 0, eggMsg = '';
+
         var mx = 0, my = 0;
         var proximity = 0;      // 0..1 how close cursor is to the figure
         var proxTarget = 0;
@@ -573,11 +608,10 @@
 
         // click easter egg
         var egg = 0;
-        var EGGS = ['access denied — nice try', 'root@prim30p: permission granted', 'you found me. now hire me.', 'trace initiated... just kidding'];
+        var EGGS = ['access denied — nice try ;)', 'permission granted. now hire me.', 'you found me. let\'s talk.', 'trace initiated... just kidding.', 'root shell acquired. impressed?'];
         mount.addEventListener('click', function () {
-            egg = 1.4;
-            var line = EGGS[Math.floor(Math.random() * EGGS.length)];
-            CMDS[0] = ['whoami', line]; // temporarily surface the response
+            egg = 1.0;
+            if (!eggStart) { eggMsg = EGGS[Math.floor(Math.random() * EGGS.length)]; eggStart = performance.now(); }
         });
 
         var t = 0;
@@ -624,16 +658,11 @@
             // levitation (settles during boot)
             char.position.y = -.45 + Math.sin(t * 1.1) * .055 * power;
             char.rotation.y = Math.sin(t * .3) * .07;
-            // entrance pop with spring overshoot, then gentle attention pulse
-            var popScale;
-            if (bt > 0 && bt < 1.1) {
-                var pb = bt / 1.1;
-                popScale = 1 + (1 - Math.pow(1 - pb, 3)) * 0 + Math.sin(pb * Math.PI) * .12; // rise + overshoot
-                popScale *= .55 + .45 * (1 - Math.pow(1 - pb, 2));
-            } else {
-                popScale = 1 + Math.sin(t * 1.3) * .018; // idle breathing pulse
-            }
-            char.scale.setScalar(CHAR_SCALE * popScale);
+            // gentle entrance pop (normal size, subtle overshoot)
+            if (bt > 0 && bt < 1.0) {
+                var pb = bt / 1.0;
+                char.scale.setScalar(.6 + .4 * (1 - Math.pow(1 - pb, 3)) + Math.sin(pb * Math.PI) * .06);
+            } else char.scale.setScalar(1);
 
             var flick = .85 + Math.sin(t * 17) * .08 + Math.sin(t * 53) * .07;
             screenLight.intensity = 1.35 * flick * alive;
@@ -719,6 +748,23 @@
             }
             particles.geometry.attributes.position.needsUpdate = true;
             particles.material.opacity = .55 * power;
+
+            // ---- easter-egg terminal: pop big, type message, hold, shrink back (~3s) ----
+            if (eggStart) {
+                var e = (performance.now() - eggStart) / 1000;
+                if (e < 3.0) {
+                    eggMesh.visible = true;
+                    var sc, op;
+                    if (e < .35) { var pin = e / .35; sc = (1 - Math.pow(1 - pin, 3)) * (1 + (1 - pin) * .12); op = pin; }
+                    else if (e > 2.7) { var pout = (3 - e) / .3; sc = pout; op = pout; }
+                    else { sc = 1; op = 1; }
+                    eggMesh.scale.setScalar(sc);
+                    eggMesh.material.opacity = op;
+                    eggMesh.position.y = 1.35 + Math.sin(t * 3) * .02;
+                    var typed = Math.min(eggMsg.length, Math.floor(Math.max(0, e - .35) * 34));
+                    drawEgg(eggMsg, typed);
+                } else { eggMesh.visible = false; eggStart = 0; }
+            }
 
             renderer.render(scene, camera);
         })();
