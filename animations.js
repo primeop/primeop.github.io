@@ -282,10 +282,37 @@
         hood.rotation.x = .22;
         headGroup.add(hood);
         // hood rim (front opening)
-        var rim = new THREE.Mesh(new THREE.TorusGeometry(.47, .055, 14, 40), cloakMat);
+        var rim = new THREE.Mesh(new THREE.TorusGeometry(.47, .055, 14, 48), cloakMat);
         rim.position.set(0, .02, .28);
         rim.rotation.x = -.32;
         headGroup.add(rim);
+        // inner hood lining (darker band inside the opening)
+        var lining = new THREE.Mesh(new THREE.TorusGeometry(.435, .04, 12, 48), cloakInner);
+        lining.position.set(0, .02, .245);
+        lining.rotation.x = -.32;
+        headGroup.add(lining);
+        // faint teal stitch trim along the rim
+        var trim = new THREE.Mesh(new THREE.TorusGeometry(.51, .006, 8, 64),
+            new THREE.MeshBasicMaterial({ color: 0x2dd4bf, transparent: true, opacity: .30 }));
+        trim.position.set(0, .02, .30);
+        trim.rotation.x = -.32;
+        headGroup.add(trim);
+        // headphones over the hood — band + cups with a teal glow ring
+        var hpMat = new THREE.MeshStandardMaterial({ color: 0x151a24, roughness: .45, metalness: .35 });
+        var hpBand = new THREE.Mesh(new THREE.TorusGeometry(.635, .034, 12, 48, Math.PI), hpMat);
+        hpBand.position.set(0, .10, .02);
+        headGroup.add(hpBand);
+        [-1, 1].forEach(function (s) {
+            var cup = new THREE.Mesh(new THREE.CylinderGeometry(.135, .125, .11, 28), hpMat);
+            cup.rotation.z = Math.PI / 2;
+            cup.position.set(s * .615, .08, .02);
+            headGroup.add(cup);
+            var cupRing = new THREE.Mesh(new THREE.TorusGeometry(.085, .010, 8, 28),
+                new THREE.MeshBasicMaterial({ color: 0x5eead4, transparent: true, opacity: .75 }));
+            cupRing.rotation.y = Math.PI / 2;
+            cupRing.position.set(s * .675, .08, .02);
+            headGroup.add(cupRing);
+        });
         // shadow behind the mask
         var faceShadow = new THREE.Mesh(new THREE.SphereGeometry(.40, 28, 28), voidMat);
         faceShadow.position.set(0, .02, .12);
@@ -380,6 +407,21 @@
         var neck = new THREE.Mesh(new THREE.CylinderGeometry(.30, .42, .55, 32), cloakInner);
         neck.position.y = .85;
         char.add(neck);
+        // collar seam
+        var collarSeam = new THREE.Mesh(new THREE.TorusGeometry(.41, .020, 10, 48), cloakInner);
+        collarSeam.rotation.x = Math.PI / 2 - .12;
+        collarSeam.position.set(0, .96, .04);
+        char.add(collarSeam);
+        // zipper line down the chest with a small pull
+        var zipMat = new THREE.MeshStandardMaterial({ color: 0x2a3242, roughness: .3, metalness: .6 });
+        var zip = new THREE.Mesh(new THREE.BoxGeometry(.022, .48, .03), zipMat);
+        zip.position.set(0, .62, .55);
+        zip.rotation.x = .42;
+        char.add(zip);
+        var zipPull = new THREE.Mesh(new THREE.BoxGeometry(.045, .07, .02), zipMat);
+        zipPull.position.set(0, .42, .655);
+        zipPull.rotation.x = .42;
+        char.add(zipPull);
 
         // uplight — glow from below, as if from an unseen screen
         var screenLight = new THREE.PointLight(0x36e6c4, 1.5, 5);
@@ -427,6 +469,37 @@
         glow.position.y = -1.05;
         scene.add(glow);
 
+        // faint floating code panels
+        function codePanel() {
+            var c = document.createElement('canvas');
+            c.width = 256; c.height = 160;
+            var ctx = c.getContext('2d');
+            for (var r = 0; r < 9; r++) {
+                var y = 12 + r * 16, x = 8;
+                var segs = 2 + Math.floor(Math.random() * 3);
+                for (var k = 0; k < segs; k++) {
+                    ctx.fillStyle = 'rgba(94,234,212,' + (.25 + Math.random() * .45) + ')';
+                    var w = 18 + Math.random() * 55;
+                    ctx.fillRect(x, y, w, 5);
+                    x += w + 12;
+                }
+            }
+            var tex = new THREE.CanvasTexture(c);
+            return new THREE.Mesh(new THREE.PlaneGeometry(.68, .42),
+                new THREE.MeshBasicMaterial({
+                    map: tex, transparent: true, opacity: .38,
+                    blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide
+                }));
+        }
+        var panelL = codePanel();
+        panelL.position.set(-1.38, .55, -.25);
+        panelL.rotation.y = .5;
+        scene.add(panelL);
+        var panelR = codePanel();
+        panelR.position.set(1.38, .9, -.35);
+        panelR.rotation.y = -.5;
+        scene.add(panelR);
+
         var mx = 0, my = 0;
         document.addEventListener('mousemove', function (e) {
             mx = (e.clientX / window.innerWidth) * 2 - 1;
@@ -456,6 +529,13 @@
             // eye pulse
             var ep = .75 + Math.sin(t * 2.2) * .25;
             eyes.forEach(function (e) { e.material.color.setHSL(.46, .85, .45 + ep * .2); });
+            // subtle breathing
+            shoulders.scale.y = 1.1 + Math.sin(t * 1.4) * .012;
+            // floating code panels drift
+            panelL.position.y = .55 + Math.sin(t * .8) * .05;
+            panelR.position.y = .9 + Math.sin(t * .8 + 1.6) * .05;
+            panelL.material.opacity = .34 + Math.sin(t * 2.1) * .06;
+            panelR.material.opacity = .34 + Math.sin(t * 1.7 + .8) * .06;
             // rings + particles
             ring1.rotation.z += .0022;
             ring2.rotation.z -= .0015;
