@@ -1,0 +1,151 @@
+/* ===== Revamp additions (Oct 2026) ===== */
+.mono { font-family: 'JetBrains Mono', 'Courier New', ui-monospace, monospace; }
+
+/* status pill */
+.status-pill {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 7px 14px; margin-bottom: 22px;
+    border: 1px solid var(--hairline-accent); border-radius: 999px;
+    background: rgba(94, 234, 212, .06);
+    color: var(--text-secondary);
+    font: 500 .82rem 'JetBrains Mono', ui-monospace, monospace;
+    letter-spacing: .02em;
+}
+.status-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent); box-shadow: 0 0 0 0 var(--accent-glow);
+    animation: pulse 2s infinite;
+}
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 var(--accent-glow); }
+    70% { box-shadow: 0 0 0 10px rgba(94, 234, 212, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(94, 234, 212, 0); }
+}
+
+/* typed line */
+.hero-typed {
+    font: 500 clamp(1.05rem, 2.2vw, 1.35rem) 'JetBrains Mono', ui-monospace, monospace;
+    color: var(--text-primary); margin: 6px 0 14px; min-height: 1.6em;
+}
+.typed-prompt { color: var(--accent); margin-right: 6px; }
+.typed-word {
+    background: linear-gradient(90deg, var(--accent), #a78bfa);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.typed-caret, .term-caret {
+    display: inline-block; width: .55em; height: 1.1em; margin-left: 3px;
+    vertical-align: -.18em; background: var(--accent);
+    animation: blink 1s steps(1) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* stack ticker */
+.stack-ticker {
+    position: relative; overflow: hidden; padding: 18px 0;
+    border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline);
+    background: rgba(255, 255, 255, .015);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+.stack-track {
+    display: flex; gap: 48px; width: max-content;
+    animation: ticker 38s linear infinite;
+}
+.stack-track span {
+    font: 600 .95rem 'JetBrains Mono', ui-monospace, monospace;
+    color: var(--text-muted); letter-spacing: .08em; text-transform: uppercase;
+    white-space: nowrap;
+}
+.stack-track span::before { content: '◆'; color: var(--accent); margin-right: 48px; font-size: .6em; vertical-align: .2em; }
+.stack-ticker:hover .stack-track { animation-play-state: paused; }
+@keyframes ticker { to { transform: translateX(-50%); } }
+
+/* terminal card */
+.term-card {
+    margin: 26px 0 30px; border: 1px solid var(--hairline-strong); border-radius: 14px;
+    background: rgba(5, 8, 15, .7); backdrop-filter: blur(12px);
+    overflow: hidden; box-shadow: 0 20px 50px -20px rgba(0, 0, 0, .7), 0 0 0 1px rgba(94, 234, 212, .04);
+}
+.term-bar {
+    display: flex; align-items: center; gap: 7px; padding: 10px 14px;
+    border-bottom: 1px solid var(--hairline); background: rgba(255, 255, 255, .03);
+}
+.term-bar span { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; }
+.term-bar span:nth-child(2) { background: #febc2e; }
+.term-bar span:nth-child(3) { background: #28c840; }
+.term-bar em { margin-left: 10px; font: normal .78rem 'JetBrains Mono', monospace; color: var(--text-muted); }
+.term-body {
+    margin: 0; padding: 16px 18px; white-space: pre-wrap;
+    font: 400 .9rem/1.75 'JetBrains Mono', ui-monospace, monospace; color: var(--text-secondary);
+}
+.term-body .tp { color: var(--accent); }
+.term-body .tk { color: #a78bfa; }
+
+/* experience */
+.now-badge {
+    display: inline-block; margin-left: 10px; padding: 2px 9px; border-radius: 999px;
+    font: 600 .68rem 'JetBrains Mono', monospace; letter-spacing: .1em; text-transform: uppercase;
+    color: #05080f; background: var(--accent); vertical-align: middle;
+    box-shadow: 0 0 18px var(--accent-glow);
+}
+.role-summary {
+    font-size: 1.05rem; line-height: 1.7; color: var(--text-secondary);
+    margin: 4px 0 20px; max-width: 70ch;
+}
+.impact-row {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px; margin-bottom: 20px;
+}
+.impact {
+    position: relative; padding: 16px 16px 14px; border-radius: 12px;
+    border: 1px solid var(--hairline); background: rgba(255, 255, 255, .025);
+    overflow: hidden; transition: border-color .3s, transform .3s var(--ease-out);
+}
+.impact::before {
+    content: ''; position: absolute; inset: 0 auto 0 0; width: 3px;
+    background: linear-gradient(var(--accent), transparent);
+}
+.impact:hover { border-color: var(--hairline-accent); transform: translateY(-3px); }
+.impact b {
+    display: block; font: 700 1.55rem 'JetBrains Mono', monospace;
+    background: var(--grad-text); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.impact span { display: block; margin-top: 4px; font-size: .82rem; color: var(--text-muted); }
+
+/* projects */
+.project-link.soon { opacity: .7; cursor: default; }
+
+/* spotlight glow that follows the cursor on cards */
+.spot { position: relative; }
+.spot::after {
+    content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), rgba(94, 234, 212, .12), transparent 45%);
+    opacity: 0; transition: opacity .3s;
+}
+.spot:hover::after { opacity: 1; }
+
+/* scroll progress bar */
+.scroll-progress {
+    position: fixed; top: 0; left: 0; height: 2px; width: 100%; z-index: 10001;
+    transform-origin: 0 50%; transform: scaleX(0);
+    background: linear-gradient(90deg, var(--accent-strong), var(--accent), #a78bfa);
+    box-shadow: 0 0 10px var(--accent-glow);
+}
+
+@media (max-width: 768px) {
+    .stack-track { gap: 28px; }
+    .stack-track span::before { margin-right: 28px; }
+    .impact b { font-size: 1.3rem; }
+    .term-body { font-size: .8rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .stack-track, .status-dot, .typed-caret, .term-caret { animation: none; }
+}
+
+/* keep the hero keywords on short lines on phones */
+@media (max-width: 600px) {
+    .hero .hero-keywords { font-size: clamp(1.9rem, 9.5vw, 2.6rem) !important; line-height: 1.1; gap: 4px 10px; }
+    .hero .hero-keywords .dot { display: none; }
+}
+
+html, body { overflow-x: clip; }

@@ -928,7 +928,7 @@
             about: '01 / Who I am', highlights: '02 / Wins & honors',
             experience: '03 / Where I’ve been', skills: '04 / My arsenal',
             certificates: '05 / Proof of work', projects: '06 / Things I built',
-            research: '07 / Published work', contact: '08 / Say hello'
+            research: '07 / Research', contact: '08 / Say hello'
         };
         Object.keys(labels).forEach(function (id) {
             var sec = document.getElementById(id);
